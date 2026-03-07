@@ -4,21 +4,36 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  LayoutDashboard,
-  Users,
-  Layout,
-  Wand2,
-  CalendarClock,
-  Image,
-  Share2,
-  Settings,
-  Zap,
-  ChevronRight,
+  ActionIcon,
+  Avatar,
+  Box,
+  Drawer,
+  Flex,
+  Group,
+  Indicator,
+  ScrollArea,
+  Stack,
+  Text,
+  UnstyledButton,
+} from "@mantine/core";
+import {
   Bell,
+  CalendarClock,
+  ChevronRight,
+  Image,
+  Layout,
+  LayoutDashboard,
   LogOut,
   Menu,
+  Settings,
+  Share2,
+  Users,
+  Wand2,
   X,
+  Zap,
 } from "lucide-react";
+
+const SIDEBAR_WIDTH = 240;
 
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
@@ -31,6 +46,137 @@ const navItems = [
   { icon: Settings, label: "Paramètres", href: "/dashboard/settings" },
 ];
 
+type SidebarContentProps = {
+  isActive: (href: string) => boolean;
+  onNavClick: () => void;
+  onClose?: () => void;
+  onLogout: () => void;
+};
+
+function SidebarContent({ isActive, onNavClick, onClose, onLogout }: SidebarContentProps) {
+  return (
+    <Flex direction="column" h="100%" bg="#04346D">
+      <Group justify="space-between" px="md" py="md">
+        <UnstyledButton component={Link} href="/" onClick={onNavClick}>
+          <Group gap="sm" wrap="nowrap">
+            <Text c="white" fz="md" fw={700}>
+              AutoMaComm
+            </Text>
+          </Group>
+        </UnstyledButton>
+
+        {onClose ? (
+          <ActionIcon variant="subtle" c="rgba(255,255,255,0.7)" onClick={onClose}>
+            <X size={16} />
+          </ActionIcon>
+        ) : null}
+      </Group>
+
+      <Box
+        mx="md"
+        mb="md"
+        p="sm"
+        style={{ borderRadius: 12, background: "rgba(255,255,255,0.08)" }}
+      >
+        <Group gap="sm" wrap="nowrap">
+          <Box
+            w={36}
+            h={36}
+            style={{
+              borderRadius: 10,
+              background: "rgba(255,255,255,0.2)",
+              display: "grid",
+              placeItems: "center",
+            }}
+          >
+            <Text c="white" fz="xs" fw={700}>
+              FC
+            </Text>
+          </Box>
+
+          <Box style={{ flex: 1, minWidth: 0 }}>
+            <Text c="white" fz="xs" fw={600} truncate>
+              FC Beaumont
+            </Text>
+            <Text c="rgba(255,255,255,0.5)" fz="xs" truncate>
+              Plan Pro
+            </Text>
+          </Box>
+
+          <ChevronRight size={14} color="rgba(255,255,255,0.4)" />
+        </Group>
+      </Box>
+
+      <ScrollArea type="never" style={{ flex: 1 }} px="xs">
+        <Stack gap={4} pb="xs">
+          {navItems.map(({ icon: Icon, label, href }) => {
+            const active = isActive(href);
+
+            return (
+              <UnstyledButton
+                key={href}
+                component={Link}
+                href={href}
+                onClick={onNavClick}
+                px="sm"
+                py={10}
+                style={{
+                  borderRadius: 12,
+                  color: active ? "white" : "rgba(255,255,255,0.6)",
+                  background: active ? "rgba(255,255,255,0.15)" : "transparent",
+                }}
+              >
+                <Group gap="sm" wrap="nowrap">
+                  <Icon size={16} />
+                  <Text fz="sm" fw={active ? 500 : 400} style={{ flex: 1 }}>
+                    {label}
+                  </Text>
+                  {active ? (
+                    <Box w={6} h={6} style={{ borderRadius: 9999, background: "rgba(255,255,255,0.7)" }} />
+                  ) : null}
+                </Group>
+              </UnstyledButton>
+            );
+          })}
+        </Stack>
+      </ScrollArea>
+
+      <Box p="md" style={{ borderTop: "1px solid rgba(255,255,255,0.1)" }}>
+        <Group gap="sm" wrap="nowrap" px={4} py={6}>
+          <Avatar radius="xl" size={32} color="gray" styles={{ root: { background: "rgba(255,255,255,0.2)" } }}>
+            <Text c="white" fz="xs" fw={700}>
+              JD
+            </Text>
+          </Avatar>
+
+          <Box style={{ flex: 1, minWidth: 0 }}>
+            <Text c="white" fz="xs" fw={500} truncate>
+              Jean Dupont
+            </Text>
+            <Text c="rgba(255,255,255,0.5)" fz="xs" truncate>
+              jean@fcbeaumont.fr
+            </Text>
+          </Box>
+        </Group>
+
+        <UnstyledButton
+          onClick={onLogout}
+          px="sm"
+          py={8}
+          mt={4}
+          w="100%"
+          style={{ borderRadius: 12, color: "rgba(255,255,255,0.5)" }}
+        >
+          <Group gap={8} wrap="nowrap">
+            <LogOut size={16} />
+            <Text fz="sm">Déconnexion</Text>
+          </Group>
+        </UnstyledButton>
+      </Box>
+    </Flex>
+  );
+}
+
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -40,155 +186,104 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     if (href === "/dashboard") {
       return pathname === "/dashboard";
     }
+
     return pathname.startsWith(href);
   };
 
+  const handleNavClick = () => setSidebarOpen(false);
+  const handleLogout = () => router.push("/login");
+
   return (
-    <div className="min-h-screen flex" style={{ background: "#F5F3EB" }}>
-      {sidebarOpen ? (
-        <div
-          className="fixed inset-0 z-20 bg-black/40 md:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      ) : null}
-
-      <aside
-        className={`fixed md:sticky top-0 h-screen z-30 flex flex-col transition-transform duration-300 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-        }`}
-        style={{ width: 240, background: "#04346D", minHeight: "100vh" }}
+    <Box mih="100vh" bg="#F5F3EB">
+      <Drawer
+        opened={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        withCloseButton={false}
+        hiddenFrom="sm"
+        size={SIDEBAR_WIDTH}
+        radius={0}
+        padding={0}
+        overlayProps={{ color: "#000", opacity: 0.4 }}
+        styles={{
+          content: { background: "#04346D" },
+          body: { height: "100%", padding: 0 },
+        }}
       >
-        <div className="px-5 py-5 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div
-              className="w-8 h-8 rounded-lg flex items-center justify-center"
-              style={{ background: "rgba(255,255,255,0.15)" }}
-            >
-              <Zap className="w-4 h-4 text-white" fill="white" />
-            </div>
-            <span className="text-white text-base" style={{ fontWeight: 700 }}>
-              AutoMaComm
-            </span>
-          </Link>
-          <button
-            className="md:hidden text-white/60 hover:text-white"
-            onClick={() => setSidebarOpen(false)}
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
+        <SidebarContent
+          isActive={isActive}
+          onNavClick={handleNavClick}
+          onClose={() => setSidebarOpen(false)}
+          onLogout={handleLogout}
+        />
+      </Drawer>
 
-        <div
-          className="mx-4 mb-4 p-3 rounded-xl flex items-center gap-3"
-          style={{ background: "rgba(255,255,255,0.08)" }}
-        >
-          <div
-            className="w-9 h-9 rounded-lg flex items-center justify-center text-xs font-bold"
-            style={{ background: "rgba(255,255,255,0.2)", color: "white" }}
-          >
-            FC
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-white text-xs truncate" style={{ fontWeight: 600 }}>
-              FC Beaumont
-            </p>
-            <p className="text-xs truncate" style={{ color: "rgba(255,255,255,0.5)" }}>
-              Plan Pro
-            </p>
-          </div>
-          <ChevronRight
-            className="w-3.5 h-3.5 flex-shrink-0"
-            style={{ color: "rgba(255,255,255,0.4)" }}
-          />
-        </div>
-
-        <nav className="flex-1 px-3 space-y-0.5 overflow-y-auto">
-          {navItems.map(({ icon: Icon, label, href }) => (
-            <Link
-              key={href}
-              href={href}
-              onClick={() => setSidebarOpen(false)}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all"
-              style={{
-                color: isActive(href) ? "white" : "rgba(255,255,255,0.6)",
-                background: isActive(href) ? "rgba(255,255,255,0.15)" : "transparent",
-                fontWeight: isActive(href) ? 500 : 400,
-              }}
-            >
-              <Icon className="w-4 h-4 flex-shrink-0" />
-              <span>{label}</span>
-              {isActive(href) ? <div className="ml-auto w-1.5 h-1.5 rounded-full bg-white/70" /> : null}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="p-4 space-y-2 border-t" style={{ borderColor: "rgba(255,255,255,0.1)" }}>
-          <div className="flex items-center gap-3 px-2 py-2">
-            <div
-              className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"
-              style={{ background: "rgba(255,255,255,0.2)" }}
-            >
-              <div className="w-full h-full flex items-center justify-center text-white text-xs font-bold">
-                JD
-              </div>
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-white text-xs truncate" style={{ fontWeight: 500 }}>
-                Jean Dupont
-              </p>
-              <p className="text-xs truncate" style={{ color: "rgba(255,255,255,0.5)" }}>
-                jean@fcbeaumont.fr
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={() => router.push("/login")}
-            className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-sm transition-all hover:bg-white/10"
-            style={{ color: "rgba(255,255,255,0.5)" }}
-          >
-            <LogOut className="w-4 h-4" />
-            <span>Déconnexion</span>
-          </button>
-        </div>
-      </aside>
-
-      <div className="flex-1 flex flex-col min-w-0">
-        <header
-          className="sticky top-0 z-10 px-6 py-4 flex items-center justify-between border-b"
+      <Group align="stretch" gap={0} wrap="nowrap" mih="100vh">
+        <Box
+          visibleFrom="sm"
+          w={SIDEBAR_WIDTH}
           style={{
-            background: "rgba(245,243,235,0.95)",
-            backdropFilter: "blur(8px)",
-            borderColor: "rgba(4,52,109,0.08)",
+            position: "sticky",
+            top: 0,
+            height: "100vh",
+            flexShrink: 0,
           }}
         >
-          <button
-            className="md:hidden p-2 rounded-lg"
-            style={{ color: "#04346D" }}
-            onClick={() => setSidebarOpen(true)}
+          <SidebarContent isActive={isActive} onNavClick={handleNavClick} onLogout={handleLogout} />
+        </Box>
+
+        <Flex direction="column" style={{ flex: 1, minWidth: 0 }}>
+          <Box
+            component="header"
+            px={24}
+            py={16}
+            style={{
+              position: "sticky",
+              top: 0,
+              zIndex: 10,
+              background: "rgba(245,243,235,0.95)",
+              backdropFilter: "blur(8px)",
+              borderBottom: "1px solid rgba(4,52,109,0.08)",
+            }}
           >
-            <Menu className="w-5 h-5" />
-          </button>
-          <div className="hidden md:block" />
+            <Group justify="space-between">
+              <ActionIcon
+                hiddenFrom="sm"
+                variant="subtle"
+                c="#04346D"
+                size="lg"
+                onClick={() => setSidebarOpen(true)}
+              >
+                <Menu size={20} />
+              </ActionIcon>
 
-          <div className="flex items-center gap-3">
-            <button
-              className="relative w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:opacity-80"
-              style={{ background: "white", border: "1px solid rgba(4,52,109,0.1)" }}
-            >
-              <Bell className="w-4 h-4" style={{ color: "#04346D" }} />
-              <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-red-500" />
-            </button>
-            <div
-              className="w-9 h-9 rounded-xl flex items-center justify-center text-white text-xs font-bold"
-              style={{ background: "#04346D" }}
-            >
-              JD
-            </div>
-          </div>
-        </header>
+              <Box visibleFrom="sm" />
 
-        <main className="flex-1 p-6 overflow-auto">{children}</main>
-      </div>
-    </div>
+              <Group gap="sm" wrap="nowrap">
+                <Indicator inline color="red" size={6} offset={6} position="top-end" withBorder>
+                  <ActionIcon
+                    size={36}
+                    radius="md"
+                    variant="default"
+                    styles={{ root: { background: "white", borderColor: "rgba(4,52,109,0.1)" } }}
+                  >
+                    <Bell size={16} color="#04346D" />
+                  </ActionIcon>
+                </Indicator>
+
+                <Avatar radius="md" size={36} styles={{ root: { background: "#04346D" } }}>
+                  <Text c="white" fz="xs" fw={700}>
+                    JD
+                  </Text>
+                </Avatar>
+              </Group>
+            </Group>
+          </Box>
+
+          <Box component="main" style={{ flex: 1, overflow: "auto" }} p={24}>
+            {children}
+          </Box>
+        </Flex>
+      </Group>
+    </Box>
   );
 }

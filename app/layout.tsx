@@ -1,8 +1,16 @@
 import type { Metadata } from "next";
+import { Montserrat } from "next/font/google";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
 import "./globals.css";
 import { Providers } from "./providers";
+
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-montserrat",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "AutoMaComm — La communication de votre club, en automatique.",
@@ -17,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body className="antialiased" style={{ fontFamily: "Montserrat, sans-serif" }}>
+      <body className={`${montserrat.variable} ${montserrat.className} antialiased`}>
         <Providers>{children}</Providers>
       </body>
     </html>
