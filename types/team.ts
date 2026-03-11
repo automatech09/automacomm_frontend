@@ -5,13 +5,13 @@ export interface Team {
   color: string;
 }
 
-export interface Player {
+export type PlayerRow = {
   id: string;
-  teamId: string;
   firstName: string;
   lastName: string;
   category: string;
-}
+  photo: string | null;
+};
 
 export interface TeamFormData {
   name: string;

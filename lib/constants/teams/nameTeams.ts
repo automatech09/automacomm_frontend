@@ -1,0 +1,1 @@
+export const possibleNameTeams = ["Équipe 1", 'Equipe réserve', "Équipe espoirs", 'U18', 'U16' ]

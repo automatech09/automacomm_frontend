@@ -1,0 +1,101 @@
+import type { ScheduleRule, TeamTag } from "@/types";
+
+export const teamTags: Record<string, TeamTag> = {
+  "Équipe 1": { label: "Équipe 1", borderColor: "#FF6B35" },
+  "Réserve": { label: "Réserve", borderColor: "#7A0FB0" },
+  U18: { label: "U18", borderColor: "#0F9B58" },
+  Toutes: { label: "Toutes", borderColor: "#D4640A" },
+};
+
+export const teamFilters = ["Tous", "Équipe 1", "Réserve", "U18"] as const;
+export type TeamFilter = (typeof teamFilters)[number];
+
+export const momentOptions = [
+  "Lundi",
+  "Mardi",
+  "Mercredi",
+  "Jeudi",
+  "Vendredi",
+  "Samedi",
+  "Dimanche",
+  "J-4",
+  "J-3",
+  "J-2",
+  "J-1 (veille du match)",
+  "Jour J",
+  "J+1 (lendemain)",
+  "J+2",
+  "J+3",
+  "J+4",
+];
+
+export const initialRules: ScheduleRule[] = [
+  {
+    id: "1",
+    visualType: "Résultat",
+    format: "P",
+    teams: [teamTags["Équipe 1"]],
+    active: true,
+    moment: "J+1 (lendemain)",
+    time: "09:00",
+    description: "Belle victoire de {team} face à {opponent} ! Score final : {score}",
+    isCustomDescription: true,
+    templates: ["Template Résultat Principal"],
+    isCarousel: false,
+  },
+  {
+    id: "2",
+    visualType: "Affiche",
+    format: "P",
+    teams: [teamTags["Équipe 1"]],
+    active: true,
+    moment: "J-2",
+    time: "18:00",
+    templates: ["Template Affiche Match"],
+    isCarousel: false,
+  },
+  {
+    id: "3",
+    visualType: "Classement",
+    format: "P",
+    teams: [teamTags["Équipe 1"], teamTags["Réserve"]],
+    active: true,
+    moment: "Lundi",
+    time: "10:00",
+    templates: ["Template Classement", "Template Stats"],
+    isCarousel: true,
+  },
+  {
+    id: "4",
+    visualType: "Affiche",
+    format: "S",
+    teams: [teamTags["Équipe 1"]],
+    active: false,
+    moment: "J-1 (veille du match)",
+    time: "17:00",
+    templates: ["Template Affiche Story"],
+    isCarousel: false,
+  },
+  {
+    id: "5",
+    visualType: "Résultat",
+    format: "P",
+    teams: [teamTags.U18],
+    active: true,
+    moment: "Dimanche",
+    time: "20:00",
+    templates: ["Template Résultat U18"],
+    isCarousel: false,
+  },
+  {
+    id: "6",
+    visualType: "Calendrier",
+    format: "P",
+    teams: [teamTags.Toutes],
+    active: true,
+    moment: "Lundi",
+    time: "08:00",
+    templates: ["Template Calendrier Semaine"],
+    isCarousel: false,
+  },
+];

@@ -1,0 +1,1 @@
+export const ableSports = ["Football", "Basketball", "Rugby", "Handball", "Volleyball", "Autre"]

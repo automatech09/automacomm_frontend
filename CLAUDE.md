@@ -1,31 +1,40 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Ce fichier fournit des instructions à Claude Code (claude.ai/code) pour travailler sur ce dépôt.
 
-## Commands
+## Commandes
 
 ```bash
-yarn dev        # Start development server at http://localhost:3000
-yarn build      # Production build
-yarn start      # Start production server
-yarn lint       # Run ESLint
+yarn dev        # Démarrer le serveur de développement sur http://localhost:3000
+yarn build      # Build de production
+yarn start      # Démarrer le serveur de production
+yarn lint       # Lancer ESLint
 ```
 
-Package manager: **Yarn 4** (use `yarn`, not `npm` or `pnpm`).
+Gestionnaire de paquets : **Yarn 4** (utiliser `yarn`, pas `npm` ni `pnpm`).
 
 ## Stack
 
-- **Next.js 16** with App Router (`app/` directory)
+- **Next.js 16** avec App Router (dossier `app/`)
 - **React 19**
 - **TypeScript 5**
 - **Tailwind CSS v4** (via `@tailwindcss/postcss`)
+- **Mantine V8** pour l'UI — limiter au maximum l'utilisation de balises HTML brutes (`div`, `p`, `span`, etc.). Utiliser en priorité les composants Mantine : `Box`, `Stack`, `Group`, `Container`, `Paper`, `Text`, `Title`, etc.
+- **@tabler/icons-react** pour les icônes — c'est la bibliothèque officielle de l'écosystème Mantine, très complète et cohérente visuellement. Ne pas utiliser `lucide-react` ni d'autres bibliothèques d'icônes.
 
 ## Architecture
 
-This project uses the Next.js App Router. All routes and layouts live under `app/`:
+Ce projet utilise le Next.js App Router. Toutes les routes et layouts sont dans `app/` :
 
-- `app/layout.tsx` — Root layout with Geist font variables applied to `<body>`
-- `app/globals.css` — Global styles (Tailwind imports)
-- `app/page.tsx` — Home page (`/` route)
+- `app/layout.tsx` — Layout racine avec les variables de police Geist sur `<body>`
+- `app/globals.css` — Styles globaux (imports Tailwind)
+- `app/page.tsx` — Page d'accueil (route `/`)
 
-New routes are added as directories under `app/` with a `page.tsx` file. Shared UI components should be placed in a `components/` directory (not yet created). Server components are the default; add `"use client"` only when needed for interactivity or browser APIs.
+Les nouvelles routes sont des dossiers sous `app/` avec un fichier `page.tsx`. Les composants UI partagés sont dans `components/`. Les Server Components sont la valeur par défaut ; ajouter `"use client"` uniquement si nécessaire pour l'interactivité ou les APIs navigateur.
+
+## Qualité du code
+
+- **Fichiers courts** : ne pas dépasser 200-300 lignes par fichier. Si un fichier grossit, découper en sous-composants dans des sous-dossiers dédiés.
+- **Factorisation** : extraire les parties répétées en composants ou utilitaires réutilisables. Éviter la duplication de code.
+- **Organisation** : ranger les composants dans des sous-dossiers thématiques (ex: `components/settings/`, `components/dashboard/`, etc.) plutôt que de tout mettre à plat.
+- **Pas de wrappers inutiles** : coder directement dans les fichiers de route (`page.tsx`) sans créer de composants intermédiaires qui ne font que réexporter.
