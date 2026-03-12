@@ -38,7 +38,6 @@ const SIDEBAR_WIDTH = 240;
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
   { icon: Layout, label: "Templates", href: "/dashboard/templates" },
-  { icon: Wand2, label: "Génération manuelle", href: "/dashboard/generation" },
   { icon: CalendarClock, label: "Planification", href: "/dashboard/scheduling" },
   { icon: Image, label: "Arrière-plans", href: "/dashboard/backgrounds" },
   { icon: Settings, label: "Paramètres", href: "/dashboard/settings" },

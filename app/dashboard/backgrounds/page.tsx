@@ -90,7 +90,7 @@ export default function BackgroundsPage() {
             </Button>
           </Group>
 
-          <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="md">
+          <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="md" style={{ alignItems: "end" }}>
             {filtered.map((template) => (
               <BackgroundCard
                 key={template.id}
