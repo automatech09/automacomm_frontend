@@ -6,10 +6,8 @@ import {
   Badge,
   Box,
   Button,
-  ColorSwatch,
   Group,
   Paper,
-  Popover,
   SimpleGrid,
   Stack,
   Text,
@@ -27,6 +25,7 @@ import {
   IconSparkles,
 } from "@tabler/icons-react";
 import { BadgeTeam } from "@/components/teams/BadgeTeam";
+import { DashboardOnboarding } from "@/components/onboarding/DashboardOnboarding";
 import { Team } from "@/types";
 
 type TeamPalette = { bg: string; text: string; border: string };
@@ -112,26 +111,19 @@ const upcomingPublications: Publication[] = [
   },
 ];
 
-const paletteChoices = ["#FF6B35", "#0F9B58", "#7A0FB0", "#0A5EBF", "#D4640A", "#E91E63"];
-
 const lastPostPlaceholder = "https://placehold.co/700x700/04346D/F5F3EB?text=Apercu+Resultat";
 const nextPostPlaceholder = "https://placehold.co/700x700/FF6B35/FFFFFF?text=Apercu+Affiche";
 
+// TODO: récupérer depuis l'API — true si l'utilisateur n'a pas encore complété l'onboarding
+const IS_FIRST_TIME = true;
+
 export default function DashboardPage() {
   const [teams, setTeams] = useState(initialTeamColors);
-  const [editingTeam, setEditingTeam] = useState<Team["name"] | null>(null);
 
-  const handleColorChange = (teamName: Team["name"], color: string) => {
-    setTeams((prev) => ({
-      ...prev,
-      [teamName]: {
-        bg: `${color}33`,
-        text: color,
-        border: color,
-      },
-    }));
-    setEditingTeam(null);
-  };
+  if (IS_FIRST_TIME) {
+    return <DashboardOnboarding clubName="FC Beaumont" />;
+  }
+
 
   return (
     <Stack gap="xl">
@@ -245,7 +237,6 @@ export default function DashboardPage() {
 
         <Stack gap={0}>
           {upcomingPublications.map((publication) => {
-            const teamColor = teams[publication.dataTeam.color];
             return (
               <Group
                 key={publication.id}

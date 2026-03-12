@@ -3,14 +3,10 @@ import {
   IconBrandInstagram,
   IconBrandFacebook,
   IconTrophy,
-  IconCalendar,
-  IconPhoto,
-  IconClock,
   IconCircleCheck,
   IconArrowRight,
   IconPlayerPlay,
   IconStar,
-  IconBolt,
 } from "@tabler/icons-react";
 import PublicLayout from "@/components/PublicLayout";
 import {
@@ -30,33 +26,13 @@ const heroImg = "https://images.unsplash.com/photo-1762445964939-123200d655ee?cr
 const teamImg = "https://images.unsplash.com/photo-1758470476264-bf1cf2b6ea66?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmb290YmFsbCUyMHNwb3J0cyUyMGNsdWIlMjB0ZWFtJTIwY2VsZWJyYXRpb258ZW58MXx8fHwxNzcyMzc4NzQ2fDA&ixlib=rb-4.1.0&q=80&w=1080";
 const socialImg = "https://images.unsplash.com/photo-1759215524600-7971d6a4dac0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpbnN0YWdyYW0lMjBzb2NpYWwlMjBtZWRpYSUyMGNvbnRlbnQlMjBjcmVhdG9yJTIwcGhvbmV8ZW58MXx8fHwxNzcyMzc4NzQ4fDA&ixlib=rb-4.1.0&q=80&w=1080";
 
-const features = [
-  { icon: IconTrophy, title: "Résultats automatiques", desc: "Les résultats de vos matchs sont récupérés automatiquement et transformés en visuels prêts à publier." },
-  { icon: IconCalendar, title: "Planification intelligente", desc: "Programmez une fois, publiez toujours. Le système s'adapte à votre calendrier sportif chaque semaine." },
-  { icon: IconPhoto, title: "Visuels personnalisés", desc: "Créez des templates aux couleurs de votre club. Chaque publication reflète votre identité visuelle." },
-  { icon: IconBrandInstagram, title: "Publication directe", desc: "Connectez Instagram et Facebook, AutoMaComm publie directement sur vos réseaux sociaux." },
-  { icon: IconClock, title: "Gain de temps radical", desc: "Fini les heures passées sur Canva. En 5 minutes, votre communication sportive est gérée pour la semaine." },
-  { icon: IconBolt, title: "Sans compétences requises", desc: "Interface pensée pour tous les bénévoles, peu importe leur niveau. Aucune formation nécessaire." },
-];
-
 const steps = [
   { num: "01", title: "Créez votre club", desc: "Renseignez vos équipes, vos couleurs et connectez vos réseaux sociaux en quelques minutes." },
   { num: "02", title: "Définissez vos templates", desc: "Personnalisez vos modèles de visuels pour chaque type de contenu : résultat, affiche, classement." },
   { num: "03", title: "Activez l'automatisation", desc: "Programmez vos publications et laissez AutoMaComm gérer le reste. C'est tout !" },
 ];
 
-const testimonials = [
-  { name: "Marc Lefebvre", role: "Président — FC Bergerac", text: "On gagnait 3h par semaine sur notre communication. Maintenant c'est 0 minute, tout est automatique.", stars: 5 },
-  { name: "Sophie Renard", role: "Community Manager — AS Moirans", text: "L'interface est tellement simple que même notre secrétaire bénévole peut gérer les publications.", stars: 5 },
-  { name: "Karim Benali", role: "Dirigeant — USL Dunkerque B", text: "Nos supporters adorent la régularité de nos posts. L'image du club a vraiment changé.", stars: 5 },
-];
 
-const stats = [
-  { value: "500+", label: "Clubs utilisateurs" },
-  { value: "12 000+", label: "Visuels générés" },
-  { value: "98%", label: "Satisfaction client" },
-  { value: "3h/sem", label: "Économisées en moyenne" },
-];
 
 export default function HomePage() {
   return (
@@ -136,49 +112,6 @@ export default function HomePage() {
         </Container>
       </Box>
 
-      {/* Stats bar */}
-      <Box bg="white" py="xl" style={{ borderBottom: "1px solid rgba(4,52,109,0.08)" }}>
-        <Container size="md">
-          <SimpleGrid cols={{ base: 2, md: 4 }} spacing="xl">
-            {stats.map((stat) => (
-              <Stack key={stat.label} align="center" gap={4}>
-                <Text style={{ fontSize: "1.75rem", fontWeight: 800 }} c="brand.7">{stat.value}</Text>
-                <Text fz="sm" c="rgba(4,52,109,0.6)">{stat.label}</Text>
-              </Stack>
-            ))}
-          </SimpleGrid>
-        </Container>
-      </Box>
-
-      {/* Features */}
-      <Box id="features" bg="#F5F3EB" py={96}>
-        <Container size="xl">
-          <Stack align="center" mb={64} gap="sm">
-            <Badge variant="light" color="brand" style={{ textTransform: "uppercase", letterSpacing: "0.1em" }}>Fonctionnalités</Badge>
-            <Title order={2} c="brand.7" ta="center" style={{ fontSize: "2.2rem", fontWeight: 700 }}>Tout ce dont votre club a besoin</Title>
-            <Text c="rgba(4,52,109,0.6)" ta="center" maw={600} fz="md">
-              Une seule plateforme pour gérer l'intégralité de votre communication sportive sur les réseaux sociaux.
-            </Text>
-          </Stack>
-          <SimpleGrid cols={{ base: 1, md: 2, lg: 3 }} spacing="lg">
-            {features.map(({ icon: Icon, title, desc }) => (
-              <Paper key={title} withBorder style={{ border: "1px solid rgba(4,52,109,0.06)" }} p="xl">
-                <Box
-                  w={44}
-                  h={44}
-                  mb="lg"
-                  style={{ borderRadius: "0.75rem", background: "rgba(4,52,109,0.06)", display: "flex", alignItems: "center", justifyContent: "center" }}
-                >
-                  <Icon size={20} color="#04346D" />
-                </Box>
-                <Text fw={600} c="brand.7" mb="xs">{title}</Text>
-                <Text fz="sm" c="rgba(4,52,109,0.6)" style={{ lineHeight: 1.6 }}>{desc}</Text>
-              </Paper>
-            ))}
-          </SimpleGrid>
-        </Container>
-      </Box>
-
       {/* How it works */}
       <Box bg="white" py={96} style={{ borderTop: "1px solid rgba(4,52,109,0.06)", borderBottom: "1px solid rgba(4,52,109,0.06)" }}>
         <Container size="xl">
@@ -237,29 +170,6 @@ export default function HomePage() {
         </Container>
       </Box>
 
-      {/* Testimonials */}
-      <Box bg="#F5F3EB" py={96}>
-        <Container size="xl">
-          <Stack align="center" mb={64} gap="sm">
-            <Badge variant="light" color="brand" style={{ textTransform: "uppercase", letterSpacing: "0.1em" }}>Témoignages</Badge>
-            <Title order={2} c="brand.7" ta="center" style={{ fontSize: "2.2rem", fontWeight: 700 }}>Ils font confiance à AutoMaComm</Title>
-          </Stack>
-          <SimpleGrid cols={{ base: 1, md: 3 }} spacing="lg">
-            {testimonials.map((t) => (
-              <Paper key={t.name} withBorder style={{ border: "1px solid rgba(4,52,109,0.06)" }} p="xl">
-                <Group gap={2} mb="md">
-                  {[...Array(t.stars)].map((_, i) => (
-                    <IconStar key={i} size={16} color="#facc15" fill="#facc15" />
-                  ))}
-                </Group>
-                <Text fz="sm" c="rgba(4,52,109,0.7)" mb="lg" style={{ lineHeight: 1.7 }}>"{t.text}"</Text>
-                <Text fz="sm" fw={600} c="brand.7">{t.name}</Text>
-                <Text fz="xs" c="rgba(4,52,109,0.5)">{t.role}</Text>
-              </Paper>
-            ))}
-          </SimpleGrid>
-        </Container>
-      </Box>
 
       {/* CTA */}
       <Box bg="brand.7" py={96} style={{ position: "relative", overflow: "hidden" }}>

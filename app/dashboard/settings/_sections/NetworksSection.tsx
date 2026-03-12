@@ -1,12 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Badge, Box, Button, Group, Paper, SimpleGrid, Stack, Text } from "@mantine/core";
-import {
-  IconAlertTriangle, IconBrandFacebook, IconBrandInstagram,
-  IconCheck, IconRefresh, IconTimeline, IconUnlink, IconPlugConnected,
-} from "@tabler/icons-react";
-import { initialNetworks, soonNetworks, type ConnectionStatus, type NetworkState } from "@/lib/mockupdata/networks/data";
+import { Badge, Group, Paper, SimpleGrid, Stack, Text } from "@mantine/core";
+import { IconBrandFacebook, IconBrandInstagram, IconTimeline } from "@tabler/icons-react";
+import { initialNetworks, soonNetworks } from "@/lib/mockupdata/networks/data";
+import type { NetworkState } from "@/types";
 import { NetworkCard } from "@/components/networks/NetworkCard";
 
 export function NetworksSection() {

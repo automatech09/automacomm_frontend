@@ -1,22 +1,4 @@
-export type ConnectionStatus = "active" | "expired" | "disconnected";
-
-export type NetworkState = {
-  instagram: {
-    connected: boolean;
-    username: string;
-    avatar: string;
-    urlAccount?: string ;
-    status: ConnectionStatus;
-    connectedSince: string;
-  };
-  facebook: {
-    connected: boolean;
-    pageName: string;
-    urlAccount?: string ;
-    status: ConnectionStatus;
-    connectedSince: string;
-  };
-};
+import type { NetworkState } from "@/types";
 
 export const initialNetworks: NetworkState = {
   instagram: {

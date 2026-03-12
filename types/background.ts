@@ -1,11 +1,13 @@
-import type { VisualType } from "./template";
+import type { Template } from "./template";
 
-export interface BackgroundItem {
-  id: string;
-  teamId: string;
-  visualType: VisualType;
+/** Un template planifié avec son créneau de publication */
+export interface ScheduledBackground {
+  template: Template;
   schedule: string;
-  templateName: string;
-  format: "post" | "story";
+}
+
+export interface UsedBackground {
+  id: number;
   imageUrl: string;
+  usedDate: string;
 }

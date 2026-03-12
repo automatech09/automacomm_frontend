@@ -1,0 +1,16 @@
+import type { Template } from "@/types";
+
+const eq1 = { id: "team1", name: "Équipe 1", color: "#FF6B35", league: "Division Régionale 1 — Auvergne-Rhône-Alpes" };
+const reserve = { id: "reserve", name: "Réserve", color: "#7A0FB0", league: "Division Honneur Régionale" };
+const u18 = { id: "u18", name: "U18", color: "#0F9B58", league: "Championnat U18 Régional" };
+
+export const initialTemplates: Template[] = [
+  { id: 1, visualType: "Résultat", name: "Match day", format: "Post", team: eq1, active: true, lastUsed: "2 mars 2026", thumbnail: "https://placehold.co/800x800/04346D/F5F3EB?text=Resultat+Post", urlArrierePlan:'https://png.pngtree.com/thumb_back/fh260/background/20240522/pngtree-abstract-cloudy-background-beautiful-natural-streaks-of-sky-and-clouds-red-image_15684333.jpg'},
+  { id: 2, visualType: "Résultat", name: "Test", format: "Story", team: eq1, active: true, thumbnail: "https://placehold.co/800x800/0A5EBF/F5F3EB?text=Resultat+Story" , urlArrierePlan:'https://png.pngtree.com/thumb_back/fh260/background/20240522/pngtree-abstract-cloudy-background-beautiful-natural-streaks-of-sky-and-clouds-red-image_15684333.jpg'},
+  { id: 3, visualType: "Affiche", name: "Test", format: "Post", team: reserve, active: true, lastUsed: "28 fév. 2026", thumbnail: "https://placehold.co/800x800/7A0FB0/F5F3EB?text=Affiche+Post" , urlArrierePlan:'https://images.unsplash.com/photo-1732511821776-14d2274e5b8c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080'},
+  { id: 4, visualType: "Affiche", name: "Test", format: "Story", team: eq1, active: true, thumbnail: "https://placehold.co/800x800/0F9B58/F5F3EB?text=Affiche+Story", urlArrierePlan:'https://png.pngtree.com/thumb_back/fh260/background/20240522/pngtree-abstract-cloudy-background-beautiful-natural-streaks-of-sky-and-clouds-red-image_15684333.jpg' },
+  { id: 5, visualType: "Classement", name: "Test", format: "Post", team: eq1, active: false, thumbnail: "https://placehold.co/800x800/D4640A/F5F3EB?text=Classement+Post", urlArrierePlan:'https://png.pngtree.com/thumb_back/fh260/background/20240522/pngtree-abstract-cloudy-background-beautiful-natural-streaks-of-sky-and-clouds-red-image_15684333.jpg' },
+  { id: 6, visualType: "Calendrier", name: "Test", format: "Post", team: reserve, active: true, thumbnail: "https://placehold.co/800x800/0F9B58/F5F3EB?text=Calendrier+Post", urlArrierePlan:'https://png.pngtree.com/thumb_back/fh260/background/20240522/pngtree-abstract-cloudy-background-beautiful-natural-streaks-of-sky-and-clouds-red-image_15684333.jpg' },
+  { id: 7, visualType: "Résultat", name: "Test", format: "Post", team: reserve, active: true, lastUsed: "1 mars 2026", thumbnail: "https://placehold.co/800x800/04346D/F5F3EB?text=Resultat+U18", urlArrierePlan:'https://png.pngtree.com/thumb_back/fh260/background/20240522/pngtree-abstract-cloudy-background-beautiful-natural-streaks-of-sky-and-clouds-red-image_15684333.jpg' },
+  { id: 8, visualType: "Classement", name: "Test", format: "Post", team: u18, active: false, thumbnail: "https://placehold.co/800x800/D4640A/F5F3EB?text=Classement+Post" , urlArrierePlan:'https://png.pngtree.com/thumb_back/fh260/background/20240522/pngtree-abstract-cloudy-background-beautiful-natural-streaks-of-sky-and-clouds-red-image_15684333.jpg'},
+];

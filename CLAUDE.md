@@ -36,5 +36,6 @@ Les nouvelles routes sont des dossiers sous `app/` avec un fichier `page.tsx`. L
 
 - **Fichiers courts** : ne pas dépasser 200-300 lignes par fichier. Si un fichier grossit, découper en sous-composants dans des sous-dossiers dédiés.
 - **Factorisation** : extraire les parties répétées en composants ou utilitaires réutilisables. Éviter la duplication de code.
-- **Organisation** : ranger les composants dans des sous-dossiers thématiques (ex: `components/settings/`, `components/dashboard/`, etc.) plutôt que de tout mettre à plat.
+- **Organisation** : ranger les composants dans des sous-dossiers thématiques (ex: `components/settings/`, `components/dashboard/`, etc.) plutôt que de tout mettre à plat. Les états "première fois / aucune donnée" de chaque page vont dans `components/onboarding/` (ex: `DashboardOnboarding.tsx`, `TemplatesOnboarding.tsx`).
 - **Pas de wrappers inutiles** : coder directement dans les fichiers de route (`page.tsx`) sans créer de composants intermédiaires qui ne font que réexporter.
+- **Types et données centralisés** : ne jamais déclarer de types/interfaces, de constantes UI (couleurs, configs, mappings) ou de données mockées directement dans les fichiers de `app/`. Placer les types dans `types/`, les constantes et configs dans `lib/constants/`, les données mockées dans `lib/mockupdata/`.

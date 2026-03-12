@@ -17,7 +17,7 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 
 const navLinks = [
-  { label: "Fonctionnalités", href: "/#features" },
+  { label: "Fonctionnalités", href: "/features" },
   { label: "Tarifs", href: "/pricing" },
   { label: "Contact", href: "/contact" },
 ];

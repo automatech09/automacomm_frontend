@@ -18,3 +18,5 @@ export interface TeamFormData {
   league: string;
   color: string;
 }
+
+export type TeamName = "Équipe 1" | "Réserve" | "U18";
