@@ -9,6 +9,7 @@ import { ClubSection } from "./_sections/ClubSection";
 import { TeamsSection } from "./_sections/TeamsSection";
 import { NetworksSection } from "./_sections/NetworksSection";
 import { DangerSection } from "./_sections/DangerSection";
+import { OpponentTeamsSection } from "./_sections/OpponentTeamsSection";
 import { initialTeams} from "@/lib/mockupdata/teams/data";
 import type { Team } from "@/types";
 
@@ -78,6 +79,10 @@ export default function SettingsPage() {
         </Stack>
         <NetworksSection />
       </Stack>
+
+      <Divider color="rgba(4,52,109,0.07)" />
+
+      <OpponentTeamsSection />
 
       <Divider color="rgba(4,52,109,0.07)" />
 

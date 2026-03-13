@@ -13,7 +13,6 @@ export function UploadModal({ opened, onClose }: Props) {
   return (
     <Modal opened={opened} onClose={onClose} title={<Text fw={700} c="brand.7">Ajouter un arrière-plan</Text>} centered radius="xl">
       <Stack gap="md">
-        {/* Drop zone */}
         <Box
           onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
           onDragLeave={() => setDragging(false)}
@@ -25,10 +24,7 @@ export function UploadModal({ opened, onClose }: Props) {
             display: "flex", flexDirection: "column", alignItems: "center", gap: 12,
           }}
         >
-          <Box
-            w={48} h={48}
-            style={{ borderRadius: 16, background: dragging ? "#04346D" : "rgba(4,52,109,0.08)", display: "grid", placeItems: "center" }}
-          >
+          <Box w={48} h={48} style={{ borderRadius: 16, background: dragging ? "#04346D" : "rgba(4,52,109,0.08)", display: "grid", placeItems: "center" }}>
             <IconUpload size={22} color={dragging ? "white" : "rgba(4,52,109,0.5)"} />
           </Box>
           <Stack gap={2}>
@@ -43,17 +39,10 @@ export function UploadModal({ opened, onClose }: Props) {
           )}
         </Box>
 
-        {/* Attribution */}
         <Stack gap="xs">
           <Text fz="sm" fw={600} c="brand.7">Attribuer à un visuel</Text>
-          <NativeSelect
-            label="Équipe concernée"
-            data={["Équipe 1", "Réserve", "U18", "Toutes"]}
-          />
-          <NativeSelect
-            label="Template visuel"
-            data={["Résultat victoire", "Résultat défaite", "Affiche match", "Classement semaine", "Calendrier mensuel"]}
-          />
+          <NativeSelect label="Équipe concernée" data={["Équipe 1", "Réserve", "U18", "Toutes"]} />
+          <NativeSelect label="Template visuel" data={["Résultat victoire", "Résultat défaite", "Affiche match", "Classement semaine", "Calendrier mensuel"]} />
         </Stack>
 
         <Group justify="flex-end" gap="sm">
