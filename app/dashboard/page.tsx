@@ -27,19 +27,11 @@ import {
 import { BadgeTeam } from "@/components/teams/BadgeTeam";
 import { DashboardOnboarding } from "@/components/onboarding/DashboardOnboarding";
 import { Team } from "@/types";
+import { Publication } from "@/types/publication";
+import { upcomingPublications } from "@/lib/mockupdata/publications/data";
 
 type TeamPalette = { bg: string; text: string; border: string };
 
-type NetworkType = "instagram" | "facebook" | "both";
-
-type Publication = {
-  id: number;
-  date: string;
-  time: string;
-  dataTeam: Team;
-  type: "Résultat" | "Classement" | "Affiche";
-  network: NetworkType;
-};
 
 const initialTeamColors: Record<Team["name"], TeamPalette> = {
   "Équipe 1": { bg: "#FFE8E0", text: "#FF6B35", border: "#FF6B35" },
@@ -52,70 +44,23 @@ const LastPublishTeam: Team = { name: "Réserve", color: "#7A0FB0", id: "reserve
 const NextPublishTeam: Team = { name: "Équipe 1", color: "#FF6B35", id: "team1", league: "Division Régionale 1 - Auvergne-Rhône-Alpes" };
 const visualTypeColor = { bg: "#04346D", text: "#F5F3EB" };
 
-const upcomingPublications: Publication[] = [
-  {
-    id: 1,
-    date: "Lun 3 mars",
-    time: "18:00",
-    dataTeam: { name: "Équipe 1", color: "#FF6B35", id: "team1", league: "Division Régionale 1 - Auvergne-Rhône-Alpes" },
-    type: "Résultat",
-    network: "instagram",
-  },
-  {
-    id: 2,
-    date: "Mar 4 mars",
-    time: "09:00",
-    dataTeam: { name: "U18", color: "#0F9B58", id: "u18", league: "Division U18 Régionale" },
-    type: "Classement",
-    network: "facebook",
-  },
-  {
-    id: 3,
-    date: "Mer 5 mars",
-    time: "17:00",
-    dataTeam: { name: "Réserve", color: "#7A0FB0", id: "reserve", league: "Division Honneur Régionale" },
-    type: "Affiche",
-    network: "instagram",
-  },
-  {
-    id: 4,
-    date: "Ven 7 mars",
-    time: "10:00",
-    dataTeam: { name: "Équipe 1", color: "#FF6B35", id: "team1", league: "Division Régionale 1 - Auvergne-Rhône-Alpes" },
-    type: "Affiche",
-    network: "both",
-  },
-  {
-    id: 5,
-    date: "Sam 8 mars",
-    time: "08:00",
-    dataTeam: { name: "Équipe 1", color: "#FF6B35", id: "team1", league: "Division Régionale 1 - Auvergne-Rhône-Alpes" },
-    type: "Résultat",
-    network: "instagram",
-  },
-  {
-    id: 6,
-    date: "Sam 8 mars",
-    time: "18:00",
-    dataTeam: { name: "U18", color: "#0F9B58", id: "u18", league: "Division U18 Régionale" },
-    type: "Résultat",
-    network: "facebook",
-  },
-  {
-    id: 7,
-    date: "Dim 9 mars",
-    time: "20:00",
-    dataTeam: { name: "Réserve", color: "#7A0FB0", id: "reserve", league: "Division Honneur Régionale" },
-    type: "Résultat",
-    network: "both",
-  },
-];
-
 const lastPostPlaceholder = "https://placehold.co/700x700/04346D/F5F3EB?text=Apercu+Resultat";
 const nextPostPlaceholder = "https://placehold.co/700x700/FF6B35/FFFFFF?text=Apercu+Affiche";
 
+function publicationVisualType(publication: Publication) {
+  return publication.templates[0]?.visualType ?? "Publication";
+}
+
+function publicationTeams(publication: Publication) {
+  const teams = publication.templates
+    .map((template) => template.team)
+    .filter((team): team is Team => team !== null);
+
+  return teams.filter((team, index, array) => array.findIndex((candidate) => candidate.id === team.id) === index);
+}
+
 // TODO: récupérer depuis l'API — true si l'utilisateur n'a pas encore complété l'onboarding
-const IS_FIRST_TIME = true;
+const IS_FIRST_TIME = false;
 
 export default function DashboardPage() {
   const [teams, setTeams] = useState(initialTeamColors);
@@ -251,12 +196,14 @@ export default function DashboardPage() {
 
                 <Box w={100}>
                   <Badge radius="xl" style={{ background: visualTypeColor.bg, color: visualTypeColor.text }}>
-                    {publication.type}
+                    {publicationVisualType(publication)}
                   </Badge>
                 </Box>
 
                 <Group gap="xs" style={{ flex: 1 }}>
-                 <BadgeTeam teamData={publication.dataTeam} />
+                  {publicationTeams(publication).map((dataTeam) => (
+                    <BadgeTeam key={dataTeam.id} teamData={dataTeam} />
+                  ))}
                 </Group>
 
                 <Group gap="xs" wrap="nowrap">

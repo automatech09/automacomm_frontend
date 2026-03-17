@@ -22,8 +22,8 @@ import { TemplateDetailsModal } from "@/components/templates/TemplateDetailsModa
 import type { CreateTemplatePayload, Template, TemplateTeamFilter } from "@/types";
 import { initialTemplates } from "@/lib/mockupdata/templates/data";
 import { teamUIColors, templateTeamTabs } from "@/lib/constants/templates";
+import { BadgeStoryOrPost } from "@/components/common/BadgeStoryPost";
 
-const templates = initialTemplates;
 const teamColors = teamUIColors;
 
 export default function TemplatesPage() {
@@ -39,7 +39,7 @@ export default function TemplatesPage() {
   }, []);
 
   const filteredTemplates = useMemo(
-    () => (activeTeam === "Tous" ? templates : templates.filter((item) => item.team?.name === activeTeam)),
+    () => (activeTeam === "Tous" ? initialTemplates : initialTemplates.filter((item) => item.team?.name === activeTeam)),
     [activeTeam]
   );
 
@@ -99,7 +99,7 @@ export default function TemplatesPage() {
       <Group justify="space-between" align="flex-start" wrap="wrap">
         <Stack gap={2}>
           <Title order={1} c="brand.7" fz="1.6rem">Templates</Title>
-          <Text fz="sm" c="rgba(4,52,109,0.5)">{filteredTemplates.length} templates · {filteredTemplates.filter((item) => item.active).length} actifs</Text>
+          <Text fz="sm" c="rgba(4,52,109,0.5)">{filteredTemplates.length} templates </Text>
         </Stack>
         <Button leftSection={<IconPlus size={16} />} bg="#04346D" radius="xl" onClick={() => setCreateOpen(true)}>
           Créer un template
@@ -127,19 +127,12 @@ export default function TemplatesPage() {
                 <Group justify="space-between" style={{ position: "absolute", top: 12, left: 12, right: 12 }}>
                   <Badge radius="xl" color="brand">{template.visualType}</Badge>
                 </Group>
-                {!template.active ? (
-                  <Box style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", background: "rgba(0,0,0,0.36)" }}>
-                    <Badge color="dark">Inactif</Badge>
-                  </Box>
-                ) : null}
               </Box>
               <Stack justify="space-between" py="lg" px="md">
                 <Text c="brand.7" fz="sm" fw={600}>{template.name}</Text>
                 <Group>
                   {template.team ? <BadgeTeam teamData={template.team} /> : null}
-                  <Badge variant="light" color="brand">
-                    {template.format === "Story" ? "S" : "P"}
-                  </Badge>
+                  <BadgeStoryOrPost format={template.format} />
                 </Group>
               </Stack>
             </Paper>
@@ -185,7 +178,7 @@ export default function TemplatesPage() {
 
       <CreateTemplateModal
         opened={createOpen}
-        templates={templates}
+        templates={initialTemplates}
         onClose={() => setCreateOpen(false)}
         onCreateTemplate={handleCreateTemplate}
       />

@@ -16,7 +16,7 @@ export function OpponentTeamsSection() {
           <Stack gap={2}>
             <Text fw={700} style={{ color: "#04346D" }}>Équipes adverses</Text>
             <Text fz="xs" style={{ color: "rgba(4,52,109,0.5)" }}>
-              Personnalisez le nom et le logo des équipes adverses affichés sur vos visuels.
+              Personnalisez le nom et le logo des équipes adverses affichés sur vos visuels et dans vos descriptions.
             </Text>
           </Stack>
         </Group>

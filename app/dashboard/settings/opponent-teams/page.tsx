@@ -92,8 +92,9 @@ export default function OpponentTeamsPage() {
           </Box>
           <Title order={2} style={{ color: "#04346D", fontSize: "1.6rem", fontWeight: 700 }}>Informations des équipes adverses</Title>
         </Group>
+      
         <Text fz="sm" style={{ color: "rgba(4,52,109,0.5)" }}>
-          Modifiez les noms et logos affichés sur vos visuels. Cliquez sur le logo pour le personnaliser.
+          Modifiez les noms des équipes que vous affrontez. Cliquez sur le logo pour le modifier si vous souhaitez utilisé votre propre version.
         </Text>
       </Stack>
 

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Badge, Group, Image, Stack, Text, UnstyledButton } from "@mantine/core";
 import { BadgeTeam } from "@/components/teams/BadgeTeam";
 import type { Template } from "@/types";
+import { BadgeStoryOrPost } from "../common/BadgeStoryPost";
 
 
 type Props = {
@@ -14,7 +15,6 @@ type Props = {
 
 export function BackgroundCard({ template, schedule, onClick }: Props) {
   const [hovered, setHovered] = useState(false);
-  const isStory = template.format === "Story";
   const bgUrl = template.urlArrierePlan;
 
   return (
@@ -45,9 +45,7 @@ export function BackgroundCard({ template, schedule, onClick }: Props) {
       </UnstyledButton>
 
       <Group gap={6} wrap="wrap">
-        <Badge size="sm" radius="sm" style={{ background: "rgba(4,52,109,0.07)", color: "#04346D" }}>
-          {isStory ? "S" : "P"}
-        </Badge>
+        <BadgeStoryOrPost format={template.format} />
         <Badge size="sm" radius="xl" style={{ background: "#04346D", color: "#F5F3EB" }}>
           {template.name}
         </Badge>

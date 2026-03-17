@@ -1,6 +1,6 @@
 import type { Team, TeamName } from "@/types/team";
 
-export type VisualType = "Résultat" | "Classement" | "Affiche" | "Calendrier";
+export type VisualType = "Résultat" | "Classement" | "Affiche" | "Score en direct";
 
 /** Alias de VisualType pour usage sémantique dans les pages */
 export type TemplateType = VisualType;
@@ -16,7 +16,6 @@ export interface Template {
   format: TemplateFormat;
   team: Team | null;
   urlArrierePlan: string | null;
-  active: boolean;
   thumbnail: string;
   lastUsed?: string;
 }
