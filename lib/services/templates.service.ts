@@ -6,6 +6,6 @@ export const templatesService = {
     return Promise.resolve(TEMPLATES);
   },
   async getByTeam(teamId: string): Promise<Template[]> {
-    return Promise.resolve(TEMPLATES.filter((template) => template.teamId === teamId));
+    return Promise.resolve(TEMPLATES.filter((template) => template.team?.id === teamId));
   },
 };

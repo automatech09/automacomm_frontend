@@ -11,7 +11,7 @@ export const visualTypeConfig: Record<VisualType, { icon: TablerIcon; color: str
   Résultat: { icon: IconTrophy, color: "#0A5EBF", bg: "#E8F4FF" },
   Classement: { icon: IconChartBar, color: "#D4640A", bg: "#FFF3E8" },
   Affiche: { icon: IconLayout, color: "#7A0FB0", bg: "#F3EEFB" },
-  Calendrier: { icon: IconCalendarStats, color: "#0F9B58", bg: "#EEFBF3" },
+  "Score en direct": { icon: IconCalendarStats, color: "#0F9B58", bg: "#EEFBF3" },
 };
 
 export const teamUIColors: Record<TeamName | "Tous", { text: string; bg: string }> = {

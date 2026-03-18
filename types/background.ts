@@ -6,6 +6,16 @@ export interface ScheduledBackground {
   schedule: string;
 }
 
+export interface BackgroundItem {
+  id: string;
+  teamId: string;
+  visualType: string;
+  schedule: string;
+  templateName: string;
+  format: string;
+  imageUrl: string;
+}
+
 export interface UsedBackground {
   id: number;
   imageUrl: string;

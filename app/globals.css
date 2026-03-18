@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "react-big-calendar/lib/css/react-big-calendar.css";
 
 :root {
   --font-size: 16px;
@@ -9,6 +10,101 @@
   --border: rgba(4, 52, 109, 0.1);
   --radius: 8px;
 }
+
+/* ── React Big Calendar overrides ─────────────────────── */
+.rbc-calendar {
+  font-family: inherit;
+}
+.rbc-toolbar {
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(4, 52, 109, 0.08);
+}
+.rbc-toolbar button {
+  color: #04346d;
+  border-color: rgba(4, 52, 109, 0.15);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 5px 12px;
+}
+.rbc-toolbar button:hover {
+  background-color: rgba(4, 52, 109, 0.06);
+  color: #04346d;
+}
+.rbc-toolbar button.rbc-active,
+.rbc-toolbar button.rbc-active:hover,
+.rbc-toolbar button.rbc-active:focus,
+.rbc-toolbar button.rbc-active:focus-visible {
+  background-color: #04346d !important;
+  color: #fff !important;
+  border-color: #04346d !important;
+  outline: none !important;
+}
+.rbc-header {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(4, 52, 109, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 8px 4px;
+  border-color: rgba(4, 52, 109, 0.08);
+}
+.rbc-month-view,
+.rbc-time-view {
+  border-color: rgba(4, 52, 109, 0.08);
+}
+.rbc-day-bg + .rbc-day-bg,
+.rbc-month-row + .rbc-month-row {
+  border-color: rgba(4, 52, 109, 0.08);
+}
+.rbc-today {
+  background-color: #f0f6ff !important;
+}
+.rbc-off-range-bg {
+  background-color: rgba(0, 0, 0, 0.018);
+}
+.rbc-date-cell {
+  font-size: 12px;
+  color: rgba(4, 52, 109, 0.65);
+  padding: 4px 6px;
+}
+.rbc-event {
+  border-radius: 6px !important;
+  padding: 2px 5px !important;
+  font-size: 11px !important;
+  box-shadow: none !important;
+}
+.rbc-event:focus {
+  outline: none;
+}
+.rbc-show-more {
+  font-size: 11px;
+  color: #04346d;
+  font-weight: 600;
+}
+.rbc-time-header-content {
+  border-color: rgba(4, 52, 109, 0.08);
+}
+.rbc-time-content {
+  border-color: rgba(4, 52, 109, 0.08);
+}
+.rbc-timeslot-group {
+  border-color: rgba(4, 52, 109, 0.06);
+}
+.rbc-time-slot {
+  font-size: 11px;
+  color: rgba(4, 52, 109, 0.4);
+}
+.rbc-allday-cell {
+  display: none !important;
+}
+.rbc-time-header-content > .rbc-row:not(.rbc-time-header-cell) {
+  display: none !important;
+  min-height: 0 !important;
+}
+/* ────────────────────────────────────────────────────── */
 
 @layer base {
   html {

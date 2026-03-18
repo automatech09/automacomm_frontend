@@ -45,54 +45,54 @@ const calendarPost = "https://placehold.co/1080x1080/0F9B58/FFFFFF?text=Template
 
 export const TEMPLATES: Template[] = [
   {
-    id: "tpl-1",
+    id: 1,
     name: "Résultat principal",
     visualType: "Résultat",
     format: "Post",
-    teamId: "team1",
-    active: true,
+    team: TEAMS[0],
+    urlArrierePlan: null,
     thumbnail: resultPost,
     lastUsed: "2 mars 2026",
   },
   {
-    id: "tpl-2",
+    id: 2,
     name: "Résultat story",
     visualType: "Résultat",
     format: "Story",
-    teamId: "team1",
-    active: true,
+    team: TEAMS[0],
+    urlArrierePlan: null,
     thumbnail: resultStory,
   },
   {
-    id: "tpl-3",
+    id: 3,
     name: "Affiche match",
     visualType: "Affiche",
     format: "Post",
-    teamId: "reserve",
-    active: true,
+    team: TEAMS[1],
+    urlArrierePlan: null,
     thumbnail: posterPost,
   },
   {
-    id: "tpl-4",
+    id: 4,
     name: "Classement semaine",
     visualType: "Classement",
     format: "Post",
-    teamId: "u18",
-    active: false,
+    team: TEAMS[2],
+    urlArrierePlan: null,
     thumbnail: rankPost,
   },
   {
-    id: "tpl-5",
+    id: 5,
     name: "Calendrier hebdo",
-    visualType: "Calendrier",
+    visualType: "Score en direct",
     format: "Post",
-    teamId: "team1",
-    active: true,
+    team: TEAMS[0],
+    urlArrierePlan: null,
     thumbnail: calendarPost,
   },
 ];
 
-export const VISUAL_TYPES: VisualType[] = ["Résultat", "Affiche", "Classement", "Calendrier"];
+export const VISUAL_TYPES: VisualType[] = ["Résultat", "Affiche", "Classement", "Score en direct"];
 
 export const MOMENT_OPTIONS = [
   "Lundi",

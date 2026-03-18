@@ -1,4 +1,5 @@
 import type { VisualType } from "./template";
+import type { NetworkType } from "./publication";
 
 export type RuleFormat = "P" | "S";
 
@@ -15,6 +16,7 @@ export interface ScheduleRule {
   active: boolean;
   moment: string;
   time: string;
+  platforms?: NetworkType;
   description?: string;
   isCustomDescription?: boolean;
   templates: string[];
