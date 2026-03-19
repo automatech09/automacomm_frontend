@@ -47,8 +47,8 @@ export const scheduledItems: ScheduledItem[] = [
 
   // ─── À venir ─────────────────────────────────────────
   { id: "u1", teamData: teamByName["Équipe 1"], date: dt(2026, 3, 22,9, 0), template: T_AFFICHE_EQ1,    platforms: "both",      status: "upcoming",  ruleId: "2" },
-  { id: "u2", teamData: teamByName["Équipe 1"], date: dt(2026, 3, 22, 9, 0),template: T_RESULTAT_EQ1,   platforms: "both",      status: "upcoming",  ruleId: "1" },
-  { id: "u3", teamData: teamByName["U18"],      date: dt(2026, 3, 22, 9, 0), template: T_RESULTAT_U18,   platforms: "instagram", status: "upcoming",  ruleId: "5" },
+  { id: "u2", teamData: teamByName["Équipe 1"], date: dt(2026, 3, 22, 9, 20),template: T_RESULTAT_EQ1,   platforms: "both",      status: "upcoming",  ruleId: "1" },
+  { id: "u3", teamData: teamByName["U18"],      date: dt(2026, 3, 22, 9, 15), template: T_RESULTAT_U18,   platforms: "instagram", status: "upcoming",  ruleId: "5" },
   { id: "u4", teamData: teamByName["Équipe 1"], date: dt(2026, 3, 22, 9, 0), template: T_CLASSEMENT_EQ1, platforms: "instagram", status: "upcoming",  ruleId: "3" },
   { id: "u5", teamData: teamByName["Équipe 1"], date: dt(2026, 3, 26, 18, 0), template: T_AFFICHE_EQ1,    platforms: "both",      status: "upcoming",  ruleId: "2" },
   { id: "u6", teamData: teamByName["Équipe 1"], date: dt(2026, 3, 29, 9, 0),template: T_RESULTAT_EQ1,   platforms: "both",      status: "upcoming",  ruleId: "1" },

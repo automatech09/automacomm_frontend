@@ -2,10 +2,11 @@
 
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Badge, Box, Group, Image, Text } from "@mantine/core";
-import type { EventProps } from "react-big-calendar";
+import { Group, Image, Modal, Stack, Text, Tooltip } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import type { VisualType } from "@/types/template";
 import type { CalendarEvent } from "@/lib/mockupdata/scheduler/data";
+import { BadgeStoryOrPost } from "@/components/common/BadgeStoryPost";
 
 export const VISUAL_CONFIG: Record<VisualType, { color: string; bg: string }> = {
   Résultat: { color: "#0A5EBF", bg: "#E8F4FF" },
@@ -14,34 +15,71 @@ export const VISUAL_CONFIG: Record<VisualType, { color: string; bg: string }> = 
   "Score en direct": { color: "#0F9B58", bg: "#EEFBF3" },
 };
 
-export function CalendarEventCard({ event }: EventProps<CalendarEvent>) {
-  const { template } = event.resource;
-  const config = VISUAL_CONFIG[template.visualType] ?? { color: "#04346D", bg: "#E8F4FF" };
+export function CalendarEventCard({ event, view = "semaine" }: { event: CalendarEvent; view?: "semaine" | "month" }) {
+  const [opened, { open, close }] = useDisclosure(false);
+  const { template, teamData } = event.resource;
   const time = format(event.start, "HH:mm", { locale: fr });
 
-  return (
-    <Box p={6} style={{ height: "100%", display: "flex", flexDirection: "column", gap: 6 }}>
-      <Group gap={6} wrap="nowrap" align="center" style={{ flexShrink: 0 }}>
-        <Text fz={11} fw={600} style={{ color: config.color, lineHeight: 1 }}>
-          {time}
-        </Text>
-        <Badge
-          size="xs"
-          variant="filled"
-          style={{ backgroundColor: config.bg, color: config.color, fontSize: 9, fontWeight: 600, padding: "2px 5px", height: "auto" }}
-        >
-          {template.visualType}
-        </Badge>
+  const cardContent =
+    view === "semaine" ? (
+      <Stack
+        gap={4}
+        bdrs={8}        
+        bg={`${teamData.color}20`}
+        bd={`1px solid ${teamData.color}`}
+        p={6}
+        style={{ cursor: "pointer", overflow: "hidden" }}
+        onClick={open}
+      >
+        <Group gap={4} wrap="nowrap">
+          <Text fz={11} fw={700} c={teamData.color} lh={1}>{time}</Text>
+          <BadgeStoryOrPost format={template.format} size="xs" />
+        </Group>
+          <Image
+            src={template.thumbnail}
+            alt={template.name}
+            mah={60}
+            maw={60}
+            radius={6}
+            style={{ objectFit: "cover"}}
+          />
+      </Stack>
+    ) : (
+      <Group
+        gap={4}
+        justify="space-between"
+        bdrs={8}
+        bg={`${teamData.color}20`}
+        bd={`1px solid ${teamData.color}`}
+        p={3}
+        style={{ cursor: "pointer" }}
+        onClick={open}
+      >
+          <Group gap={3} >
+          <BadgeStoryOrPost format={template.format} size="xs" />
+          <Text fz={11} fw={700} c={teamData.color} lh={1}>{time}</Text>
+          
+          </Group>
+          <Image
+            src={template.thumbnail}
+            alt={template.name}
+            mah={25}
+            maw={25}
+            radius={3}
+            style={{ objectFit: "cover" }}
+          />
       </Group>
-      <Box style={{ flex: 1, minHeight: 0, borderRadius: 4, overflow: "hidden" }}>
-        <Image
-          src={template.thumbnail}
-          alt={template.name}
-          mah={60}
-          maw={60}
-          fit="contain"
-        />
-      </Box>
-    </Box>
+    );
+
+  return (
+    <>
+      <Tooltip label={"Label à remplir"} >
+        {cardContent}
+      </Tooltip>
+      <Modal opened={opened} onClose={close} title="">
+        {/* à remplir */}
+        <Image radius={4} src={template.thumbnail} alt={template.name} mah={60} maw={60} />
+      </Modal>
+    </>
   );
 }

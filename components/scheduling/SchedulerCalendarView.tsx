@@ -1,12 +1,17 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
-import { Calendar, dateFnsLocalizer, Views, type EventWrapperProps } from "react-big-calendar";
-import { format, getDay, parse, startOfWeek } from "date-fns";
+import { useMemo, useState } from "react";
+import { addDays, addMonths, addWeeks, endOfWeek, format, startOfWeek, subMonths, subWeeks } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Box } from "@mantine/core";
+import { ActionIcon, Box, Button, Group, Stack, Text } from "@mantine/core";
+import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
+import { Calendar, dateFnsLocalizer, Views, type EventProps } from "react-big-calendar";
+import { getDay, parse } from "date-fns";
 import { scheduledItems, toCalendarEvents, type CalendarEvent } from "@/lib/mockupdata/scheduler/data";
-import { CalendarEventCard, VISUAL_CONFIG } from "@/components/scheduling/CalendarEventCard";
+import { CalendarEventCard } from "@/components/scheduling/CalendarEventCard";
+import { SchedulerWeekView } from "@/components/scheduling/SchedulerWeekView";
+
+type ViewType = "week" | "month" | "agenda";
 
 const localizer = dateFnsLocalizer({
   format,
@@ -16,96 +21,105 @@ const localizer = dateFnsLocalizer({
   locales: { fr },
 });
 
-const MESSAGES = {
-  next: "Suiv.",
-  previous: "Préc.",
-  today: "Aujourd'hui",
-  month: "Mois",
-  week: "Semaine",
-  day: "Jour",
-  agenda: "Agenda",
-  date: "Date",
-  time: "Heure",
-  event: "Publication",
+// Adapter : CalendarEventCard pour RBC (mois/agenda)
+const RBCEventCard = ({ event }: EventProps<CalendarEvent>) => <CalendarEventCard event={event} view="month" />;
+
+const VIEWS: { value: ViewType; label: string }[] = [
+  { value: "week", label: "Semaine" },
+  { value: "month", label: "Mois" },
+  { value: "agenda", label: "Agenda" },
+];
+
+const RBC_MESSAGES = {
+  month: "Mois", week: "Semaine", day: "Jour", agenda: "Agenda",
+  date: "Date", time: "Heure", event: "Publication",
   noEventsInRange: "Aucune publication prévue.",
-  showMore: (total: number) => `+${total} de plus`,
+  showMore: (n: number) => `+${n} de plus`,
 };
 
-// Hauteur fixe de chaque event card en pixels — indépendante de la durée
-const EVENT_HEIGHT = 100;
+function getLabel(date: Date, view: ViewType): string {
+  if (view === "week") {
+    const s = startOfWeek(date, { weekStartsOn: 1 });
+    const e = endOfWeek(date, { weekStartsOn: 1 });
+    return `${format(s, "d MMM", { locale: fr })} – ${format(e, "d MMM yyyy", { locale: fr })}`;
+  }
+  if (view === "month") return format(date, "MMMM yyyy", { locale: fr });
+  return format(date, "d MMM yyyy", { locale: fr });
+}
 
-const EventWrapper = (props: EventWrapperProps<CalendarEvent>) => {
-  const children = (props as unknown as { children: React.ReactElement<{ style?: React.CSSProperties }> }).children;
-  return React.cloneElement(children, {
-    style: {
-      ...children.props.style,
-      height: EVENT_HEIGHT,
-      minHeight: EVENT_HEIGHT,
-    },
-  });
-};
+function navigate(date: Date, view: ViewType, dir: 1 | -1): Date {
+  if (view === "week") return dir === 1 ? addWeeks(date, 1) : subWeeks(date, 1);
+  if (view === "month") return dir === 1 ? addMonths(date, 1) : subMonths(date, 1);
+  return addDays(date, dir * 30);
+}
 
 export function SchedulerCalendarView() {
-  const [view, setView] = useState<(typeof Views)[keyof typeof Views]>(Views.WEEK);
+  const [view, setView] = useState<ViewType>("week");
   const [date, setDate] = useState(() => new Date());
   const events = useMemo(() => toCalendarEvents(scheduledItems), []);
-  const scrollToTime = useMemo(() => {
-    const now = new Date();
-    const centeredHour = Math.max(0, now.getHours() - 4);
-    now.setHours(centeredHour, now.getMinutes(), 0, 0);
-    return now;
-  }, []);
-
-  const eventPropGetter = (event: CalendarEvent) => {
-    const config = VISUAL_CONFIG[event.resource.template.visualType] ?? { color: "#04346D", bg: "#E8F4FF" };
-    return {
-      style: {
-        backgroundColor: config.bg,
-        border: `1px solid ${config.color}30`,
-        borderLeft: `3px solid ${config.color}`,
-        borderRadius: 8,
-        color: config.color,
-      },
-    };
-  };
 
   return (
-    <Box>
-      <Box
-        h="80vh"
-        bd="1px solid rgba(4,52,109,0.1)"
-        bdrs={16}
-        bg="white"
-        style={{ overflow: "hidden", boxShadow: "0 2px 12px rgba(4,52,109,0.06)" }}
-      >
-        <Calendar
-          localizer={localizer}
-          events={events}
-          defaultView={Views.WEEK}
-          view={view}
-          step={60}
-          timeslots={1}
-          onView={setView}
-          date={date}
-          onNavigate={setDate}
-          culture="fr"
-          messages={MESSAGES}
-          eventPropGetter={eventPropGetter}
-          components={{ event: CalendarEventCard, eventWrapper: EventWrapper }}
-          scrollToTime={scrollToTime}
-          formats={{
-            agendaDateFormat: (d) => format(d, "EEE d MMM", { locale: fr }),
-            agendaTimeRangeFormat: ({ start }) => format(start, "HH:mm", { locale: fr }),
-            eventTimeRangeFormat: () => "",
-            dayHeaderFormat: (d) => format(d, "EEE d MMM", { locale: fr }),
-            dayRangeHeaderFormat: ({ start, end }) =>
-              `${format(start, "d MMM", { locale: fr })} – ${format(end, "d MMM yyyy", { locale: fr })}`,
-            monthHeaderFormat: (d) => format(d, "MMMM yyyy", { locale: fr }).toUpperCase(),
-            dayFormat: (d) => format(d, "EEE d", { locale: fr }),
-            weekdayFormat: (d) => format(d, "EEE", { locale: fr }),
-          }}
-        />
+    <Stack
+      gap={0}
+      h="80vh"
+      bd="1px solid rgba(4,52,109,0.1)"
+      bdrs={16}
+      bg="white"
+      style={{ overflow: "hidden", boxShadow: "0 2px 12px rgba(4,52,109,0.06)" }}
+    >
+      {/* Toolbar */}
+      <Group justify="space-between" px={16} py={10} style={{ borderBottom: "1px solid rgba(4,52,109,0.08)", flexShrink: 0 }}>
+        <Group gap={6}>
+          <Button variant="default" size="xs" radius="md" onClick={() => setDate(new Date())}>
+            Aujourd'hui
+          </Button>
+          <ActionIcon variant="subtle" color="dark" size="sm" onClick={() => setDate((d) => navigate(d, view, -1))}>
+            <IconChevronLeft size={16} />
+          </ActionIcon>
+          <ActionIcon variant="subtle" color="dark" size="sm" onClick={() => setDate((d) => navigate(d, view, 1))}>
+            <IconChevronRight size={16} />
+          </ActionIcon>
+        </Group>
+
+        <Text fz={14} fw={600} c="#04346D">
+          {getLabel(date, view)}
+        </Text>
+
+        <Button.Group>
+          {VIEWS.map((v) => (
+            <Button
+              key={v.value}
+              size="xs"
+              variant={view === v.value ? "filled" : "default"}
+              color={view === v.value ? "#04346D" : undefined}
+              style={{ borderRadius: v.value === "week" ? "6px 0 0 6px" : v.value === "agenda" ? "0 6px 6px 0" : 0 }}
+              onClick={() => setView(v.value)}
+            >
+              {v.label}
+            </Button>
+          ))}
+        </Button.Group>
+      </Group>
+
+      {/* Contenu */}
+      <Box style={{ flex: 1, overflow: "hidden" }}>
+        {view === "week" ? (
+          <SchedulerWeekView date={date} events={events} />
+        ) : (
+          <Calendar
+            localizer={localizer}
+            events={events}
+            view={view === "month" ? Views.MONTH : Views.AGENDA}
+            date={date}
+            onNavigate={setDate}
+            culture="fr"
+            messages={RBC_MESSAGES}
+            components={{ toolbar: () => null, event: RBCEventCard }}
+            eventPropGetter={() => ({ style: { backgroundColor: "transparent", border: "none", padding: 0 } })}
+            style={{ height: "100%" }}
+          />
+        )}
       </Box>
-    </Box>
+    </Stack>
   );
 }
