@@ -71,14 +71,16 @@
   padding: 4px 6px;
 }
 .rbc-event {
-  border-radius: 6px !important;
-  padding: 2px 5px !important;
+  border-radius: 8px !important;
+  padding: 0 !important;
   font-size: 11px !important;
   box-shadow: none !important;
+  overflow: hidden !important;
 }
 .rbc-event:focus {
   outline: none;
 }
+
 .rbc-show-more {
   font-size: 11px;
   color: #04346d;

@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Calendar, dateFnsLocalizer, Views } from "react-big-calendar";
+import React, { useMemo, useState } from "react";
+import { Calendar, dateFnsLocalizer, Views, type EventWrapperProps } from "react-big-calendar";
 import { format, getDay, parse, startOfWeek } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Box } from "@mantine/core";
@@ -31,6 +31,19 @@ const MESSAGES = {
   showMore: (total: number) => `+${total} de plus`,
 };
 
+// Hauteur fixe de chaque event card en pixels — indépendante de la durée
+const EVENT_HEIGHT = 100;
+
+const EventWrapper = (props: EventWrapperProps<CalendarEvent>) => {
+  const children = (props as unknown as { children: React.ReactElement<{ style?: React.CSSProperties }> }).children;
+  return React.cloneElement(children, {
+    style: {
+      ...children.props.style,
+      height: EVENT_HEIGHT,
+      minHeight: EVENT_HEIGHT,
+    },
+  });
+};
 
 export function SchedulerCalendarView() {
   const [view, setView] = useState<(typeof Views)[keyof typeof Views]>(Views.WEEK);
@@ -44,13 +57,13 @@ export function SchedulerCalendarView() {
   }, []);
 
   const eventPropGetter = (event: CalendarEvent) => {
-    const config = VISUAL_CONFIG[event.resource.visualType] ?? { color: "#04346D", bg: "#E8F4FF" };
+    const config = VISUAL_CONFIG[event.resource.template.visualType] ?? { color: "#04346D", bg: "#E8F4FF" };
     return {
       style: {
         backgroundColor: config.bg,
         border: `1px solid ${config.color}30`,
         borderLeft: `3px solid ${config.color}`,
-        borderRadius: 6,
+        borderRadius: 8,
         color: config.color,
       },
     };
@@ -59,14 +72,11 @@ export function SchedulerCalendarView() {
   return (
     <Box>
       <Box
-      h="80vh"
-      bd={"1px solid rgba(4,52,109,0.1)"}
-      bdrs={16}
-      bg='white'
-        style={{
-          overflow: "hidden",
-          boxShadow: "0 2px 12px rgba(4,52,109,0.06)",
-        }}
+        h="80vh"
+        bd="1px solid rgba(4,52,109,0.1)"
+        bdrs={16}
+        bg="white"
+        style={{ overflow: "hidden", boxShadow: "0 2px 12px rgba(4,52,109,0.06)" }}
       >
         <Calendar
           localizer={localizer}
@@ -74,19 +84,18 @@ export function SchedulerCalendarView() {
           defaultView={Views.WEEK}
           view={view}
           step={60}
-          timeslots={2}
+          timeslots={1}
           onView={setView}
           date={date}
           onNavigate={setDate}
           culture="fr"
           messages={MESSAGES}
           eventPropGetter={eventPropGetter}
-          components={{ event: CalendarEventCard }}
+          components={{ event: CalendarEventCard, eventWrapper: EventWrapper }}
           scrollToTime={scrollToTime}
           formats={{
             agendaDateFormat: (d) => format(d, "EEE d MMM", { locale: fr }),
-            agendaTimeRangeFormat: ({ start }) => format(start, "HH:mm", { locale:
-             fr }),
+            agendaTimeRangeFormat: ({ start }) => format(start, "HH:mm", { locale: fr }),
             eventTimeRangeFormat: () => "",
             dayHeaderFormat: (d) => format(d, "EEE d MMM", { locale: fr }),
             dayRangeHeaderFormat: ({ start, end }) =>
