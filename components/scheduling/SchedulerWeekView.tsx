@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { addDays, format, isSameDay, isToday, startOfWeek } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Box, Center, Group, Stack, Text } from "@mantine/core";
-import type { CalendarEvent } from "@/lib/mockupdata/scheduler/data";
+import type { ScheduledItem } from "@/lib/mockupdata/scheduler/data";
 import { CalendarEventCard } from "./CalendarEventCard";
 
 // ─── Constantes ───────────────────────────────────────────
@@ -44,8 +44,8 @@ function NowLine({ day, slotHeights }: { day: Date; slotHeights: number[] }) {
 }
 
 // ─── Groupe d'events (2 par ligne) ───────────────────────
-function EventGroup({ events }: { events: CalendarEvent[] }) {
-  const rows: CalendarEvent[][] = [];
+function EventGroup({ events }: { events: ScheduledItem[] }) {
+  const rows: ScheduledItem[][] = [];
   for (let i = 0; i < events.length; i += 2) rows.push(events.slice(i, i + 2));
   return (
     <Stack gap={CARD_GAP}>
@@ -64,11 +64,11 @@ function EventGroup({ events }: { events: CalendarEvent[] }) {
 }
 
 // ─── Colonne d'un jour ────────────────────────────────────
-function DayColumn({ day, events, slotHeights }: { day: Date; events: CalendarEvent[]; slotHeights: number[] }) {
+function DayColumn({ day, events, slotHeights }: { day: Date; events: ScheduledItem[]; slotHeights: number[] }) {
   return (
     <Stack gap={0} style={{ flex: 1, minWidth: 0, position: "relative", borderLeft: `1px solid ${BORDER_MID}` }}>
       {HOURS.map((h, i) => {
-        const hourEvents = events.filter((e) => e.start.getHours() === h);
+        const hourEvents = events.filter((e) => e.date.getHours() === h);
         return (
           <Box
             key={h}
@@ -91,7 +91,7 @@ function DayColumn({ day, events, slotHeights }: { day: Date; events: CalendarEv
 // ─── Vue semaine ──────────────────────────────────────────
 interface Props {
   date: Date;
-  events: CalendarEvent[];
+  events: ScheduledItem[];
 }
 
 export function SchedulerWeekView({ date, events }: Props) {
@@ -103,7 +103,7 @@ export function SchedulerWeekView({ date, events }: Props) {
   const slotHeights = useMemo(
     () => HOURS.map((h) => {
       const max = Math.max(0, ...days.map((day) =>
-        events.filter((e) => isSameDay(e.start, day) && e.start.getHours() === h).length
+        events.filter((e) => isSameDay(e.date, day) && e.date.getHours() === h).length
       ));
       return getSlotHeight(max);
     }),
@@ -153,7 +153,7 @@ export function SchedulerWeekView({ date, events }: Props) {
             <DayColumn
               key={day.toISOString()}
               day={day}
-              events={events.filter((e) => isSameDay(e.start, day))}
+              events={events.filter((e) => isSameDay(e.date, day))}
               slotHeights={slotHeights}
             />
           ))}

@@ -11,18 +11,6 @@ export interface ScheduledItem {
   ruleId?: string;
 }
 
-export interface CalendarEvent {
-  id: string;
-  title: string;
-  start: Date;
-  end: Date;
-  resource: {
-    templates: Template[];
-    platforms: NetworkType;
-    status: "upcoming" | "published" | "error";
-  };
-}
-
 // ─── Références aux templates existants ──────────────────
 const T_RESULTAT_EQ1     = initialTemplates.find((t) => t.id === 1)!;
 const T_AFFICHE_EQ1      = initialTemplates.find((t) => t.id === 4)!;
@@ -60,16 +48,3 @@ export const scheduledItems: ScheduledItem[] = [
   { id: "c3", date: dt(2026, 4, 2, 10, 0),   templates: [T_RESULTAT_EQ1, T_RESULTAT_RESERVE, T_RESULTAT_U18],  platforms: "both",      status: "upcoming" },
 ];
 
-export function toCalendarEvents(items: ScheduledItem[]): CalendarEvent[] {
-  return items.map((item) => ({
-    id: item.id,
-    title: item.templates.map((t) => t.name).join(", "),
-    start: item.date,
-    end: new Date(item.date.getTime() + 15 * 60 * 1000),
-    resource: {
-      templates: item.templates,
-      platforms: item.platforms,
-      status: item.status,
-    },
-  }));
-}

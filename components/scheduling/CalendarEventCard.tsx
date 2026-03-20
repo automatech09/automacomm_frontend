@@ -5,10 +5,11 @@ import { fr } from "date-fns/locale";
 import { Badge, Box, Group, Image, Modal, Stack, Text, Tooltip } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import type { VisualType } from "@/types/template";
-import type { CalendarEvent } from "@/lib/mockupdata/scheduler/data";
+import type { ScheduledItem } from "@/lib/mockupdata/scheduler/data";
 import { BadgeStoryOrPost } from "@/components/common/BadgeStoryPost";
 import { BadgeTeam } from "../teams/BadgeTeam";
 import { Carousel } from "@/components/common/Carousel";
+import { COLORS } from "@/lib/constants/colors";
 
 export const VISUAL_CONFIG: Record<VisualType, { color: string; bg: string }> = {
   Résultat: { color: "#0A5EBF", bg: "#E8F4FF" },
@@ -17,31 +18,31 @@ export const VISUAL_CONFIG: Record<VisualType, { color: string; bg: string }> = 
   "Score en direct": { color: "#0F9B58", bg: "#EEFBF3" },
 };
 
-const NEUTRAL = "#04346D";
+const NEUTRAL = COLORS.primary;
 
-function getUniqueTeams(event: CalendarEvent) {
+function getUniqueTeams(event: ScheduledItem) {
   const seen = new Set<string>();
-  return event.resource.templates
+  return event.templates
     .map((t) => t.team)
     .filter((t): t is NonNullable<typeof t> => !!t && !seen.has(t.id) && !!seen.add(t.id));
 }
 
-function getEventColor(event: CalendarEvent): string {
+function getEventColor(event: ScheduledItem): string {
   const teams = getUniqueTeams(event);
   return teams.length === 1 ? teams[0].color : NEUTRAL;
 }
 
-function EventTooltipLabel({ event }: { event: CalendarEvent }) {
+function EventTooltipLabel({ event }: { event: ScheduledItem }) {
   const teams = getUniqueTeams(event);
   return (
     <Stack gap={8} p={4}>
       {/* Date & heure */}
       <Group gap={6}>
         <Text fz={12} fw={700} c="dark" lh={1}>
-          {format(event.start, "d MMMM yyyy", { locale: fr })}
+          {format(event.date, "d MMMM yyyy", { locale: fr })}
         </Text>
         <Text fz={12} fw={700} c="dimmed" lh={1}>
-          {format(event.start, "HH:mm", { locale: fr })}
+          {format(event.date, "HH:mm", { locale: fr })}
         </Text>
       </Group>
 
@@ -52,7 +53,7 @@ function EventTooltipLabel({ event }: { event: CalendarEvent }) {
 
       {/* Templates */}
       <Stack gap={6}>
-        {event.resource.templates.map((t) => (
+        {event.templates.map((t) => (
           <Group key={t.id} gap={6} align="center">
             <Badge radius="xl" variant="light" color={"brand"} size="xs">
               {t.visualType}
@@ -65,11 +66,11 @@ function EventTooltipLabel({ event }: { event: CalendarEvent }) {
   );
 }
 
-export function CalendarEventCard({ event, view = "semaine" }: { event: CalendarEvent; view?: "semaine" | "month" }) {
+export function CalendarEventCard({ event, view = "semaine" }: { event: ScheduledItem; view?: "semaine" | "month" }) {
   const [opened, { open, close }] = useDisclosure(false);
-  const { templates } = event.resource;
+  const { templates } = event;
   const color = getEventColor(event);
-  const time = format(event.start, "HH:mm", { locale: fr });
+  const time = format(event.date, "HH:mm", { locale: fr });
 
   const cardContent =
     view === "semaine" ? (

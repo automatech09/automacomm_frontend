@@ -8,10 +8,7 @@ import { notifications } from "@mantine/notifications";
 import { SchedulerRulesView } from "@/components/scheduling/SchedulerRulesView";
 
 const SchedulerCalendarView = dynamic(
-  () =>
-    import("@/components/scheduling/SchedulerCalendarView").then((m) => ({
-      default: m.SchedulerCalendarView,
-    })),
+  () => import("@/components/scheduling/SchedulerCalendarView").then((m) => ({ default: m.SchedulerCalendarView })),
   {
     ssr: false,
     loading: () => (
@@ -30,16 +27,10 @@ export default function SchedulingPage() {
     <Tabs value={tab} onChange={setTab} variant="pills" radius="xl">
       <Group justify="space-between" align="center" mb="lg">
         <Group align="center" gap="lg">
-          <Title order={1} c="brand.7" fz="1.4rem">
-            Planification
-          </Title>
+          <Title order={1} c="brand.7" fz="1.4rem">Planification</Title>
           <Tabs.List>
-            <Tabs.Tab value="calendar" leftSection={<IconCalendar size={15} />}>
-              Calendrier
-            </Tabs.Tab>
-            <Tabs.Tab value="rules" leftSection={<IconSettings size={15} />}>
-              Règles
-            </Tabs.Tab>
+            <Tabs.Tab value="calendar" leftSection={<IconCalendar size={15} />}>Calendrier</Tabs.Tab>
+            <Tabs.Tab value="rules" leftSection={<IconSettings size={15} />}>Règles</Tabs.Tab>
           </Tabs.List>
         </Group>
         {tab === "calendar" && (
@@ -47,9 +38,7 @@ export default function SchedulingPage() {
             leftSection={<IconPlus size={15} />}
             radius="xl"
             size="sm"
-            onClick={() =>
-              notifications.show({ message: "Fonctionnalité bientôt disponible", color: "blue" })
-            }
+            onClick={() => notifications.show({ message: "Fonctionnalité bientôt disponible", color: "blue" })}
           >
             Programmer un visuel
           </Button>
@@ -59,7 +48,6 @@ export default function SchedulingPage() {
       <Tabs.Panel value="calendar">
         <SchedulerCalendarView />
       </Tabs.Panel>
-
       <Tabs.Panel value="rules">
         <SchedulerRulesView />
       </Tabs.Panel>

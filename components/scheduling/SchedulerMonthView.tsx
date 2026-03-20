@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { addDays, format, isSameDay, isSameMonth, isToday, startOfMonth, startOfWeek } from "date-fns";
 import { Box, Center, Group, Stack, Text } from "@mantine/core";
-import type { CalendarEvent } from "@/lib/mockupdata/scheduler/data";
+import type { ScheduledItem } from "@/lib/mockupdata/scheduler/data";
 import { CalendarEventCard } from "./CalendarEventCard";
 
 // ─── Constantes ───────────────────────────────────────────
@@ -40,7 +40,7 @@ function getWeeks(date: Date): Date[][] {
 function DayCell({
   day, events, maxVisible, expanded, onExpand, month,
 }: {
-  day: Date; events: CalendarEvent[]; maxVisible: number;
+  day: Date; events: ScheduledItem[]; maxVisible: number;
   expanded: boolean; onExpand: () => void; month: Date;
 }) {
   const visible = events.slice(0, maxVisible);
@@ -93,10 +93,10 @@ function DayCell({
 }
 
 // ─── Ligne d'une semaine ──────────────────────────────────
-function WeekRow({ days, events, month }: { days: Date[]; events: CalendarEvent[]; month: Date }) {
+function WeekRow({ days, events, month }: { days: Date[]; events: ScheduledItem[]; month: Date }) {
   const [expanded, setExpanded] = useState(false);
 
-  const eventsByDay = days.map((day) => events.filter((e) => isSameDay(e.start, day)));
+  const eventsByDay = days.map((day) => events.filter((e) => isSameDay(e.date, day)));
   const maxPerDay = Math.max(0, ...eventsByDay.map((evs) => evs.length));
   const hasOverflow = !expanded && maxPerDay > MAX_VISIBLE;
   const height = rowHeight(expanded ? maxPerDay : MAX_VISIBLE) + (hasOverflow ? 8 : 0);
@@ -134,7 +134,7 @@ function WeekRow({ days, events, month }: { days: Date[]; events: CalendarEvent[
 // ─── Vue mois ─────────────────────────────────────────────
 interface Props {
   date: Date;
-  events: CalendarEvent[];
+  events: ScheduledItem[];
 }
 
 export function SchedulerMonthView({ date, events }: Props) {
