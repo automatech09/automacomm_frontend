@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
-import { Box, Button, Group, Skeleton, Tabs, Title } from "@mantine/core";
+import { ActionIcon, Box, Button, Group, Skeleton, Tabs, Title } from "@mantine/core";
 import { IconCalendar, IconPlus, IconSettings } from "@tabler/icons-react";
 import { notifications } from "@mantine/notifications";
 import { SchedulerRulesView } from "@/components/scheduling/SchedulerRulesView";
@@ -27,21 +27,32 @@ export default function SchedulingPage() {
     <Tabs value={tab} onChange={setTab} variant="pills" radius="xl">
       <Group justify="space-between" align="center" mb="lg">
         <Group align="center" gap="lg">
-          <Title order={1} c="brand.7" fz="1.4rem">Planification</Title>
+          <Title order={1} c="brand.7" fz="1.4rem" visibleFrom="sm">Planification</Title>
           <Tabs.List>
             <Tabs.Tab value="calendar" leftSection={<IconCalendar size={15} />}>Calendrier</Tabs.Tab>
             <Tabs.Tab value="rules" leftSection={<IconSettings size={15} />}>Règles</Tabs.Tab>
           </Tabs.List>
         </Group>
         {tab === "calendar" && (
-          <Button
-            leftSection={<IconPlus size={15} />}
-            radius="xl"
-            size="sm"
-            onClick={() => notifications.show({ message: "Fonctionnalité bientôt disponible", color: "blue" })}
-          >
-            Programmer un visuel
-          </Button>
+          <>
+            <Button
+              visibleFrom="sm"
+              leftSection={<IconPlus size={15} />}
+              radius="xl"
+              size="sm"
+              onClick={() => notifications.show({ message: "Fonctionnalité bientôt disponible", color: "blue" })}
+            >
+              Programmer un visuel
+            </Button>
+            <ActionIcon
+              hiddenFrom="sm"
+              radius="xl"
+              size="md"
+              onClick={() => notifications.show({ message: "Fonctionnalité bientôt disponible", color: "blue" })}
+            >
+              <IconPlus size={16} />
+            </ActionIcon>
+          </>
         )}
       </Group>
 

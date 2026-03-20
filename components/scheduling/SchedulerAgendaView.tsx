@@ -1,21 +1,16 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { format, isToday, isTomorrow, isYesterday } from "date-fns";
 import { fr } from "date-fns/locale";
-import { ActionIcon, Badge, Box, Group, Image, Menu, Paper, Stack, Text } from "@mantine/core";
-import { IconDots, IconEdit, IconPlayerPlay } from "@tabler/icons-react";
+import { ActionIcon, Badge, Box, Group, Image, Menu, Paper, SimpleGrid, Stack, Text } from "@mantine/core";
+import { IconDots } from "@tabler/icons-react";
 import { scheduledItems, type ScheduledItem } from "@/lib/mockupdata/scheduler/data";
 import { BadgeTeam } from "@/components/teams/BadgeTeam";
+import { COLORS } from "@/lib/constants/colors";
+import { STATUS_CONFIG } from "@/lib/constants/scheduler";
 
-// ─── Constantes ───────────────────────────────────────────
-const PRIMARY = "#04346D";
-
-const STATUS_CONFIG = {
-  upcoming:  { color: "blue",  label: "À venir" },
-  published: { color: "green", label: "Publié" },
-  error:     { color: "red",   label: "Erreur" },
-};
+const PRIMARY = COLORS.primary;
 
 function getDayLabel(date: Date): string {
   if (isToday(date))     return `Aujourd'hui, ${format(date, "d MMMM", { locale: fr })}`;
@@ -26,84 +21,80 @@ function getDayLabel(date: Date): string {
 
 // ─── Card d'un événement ──────────────────────────────────
 function AgendaEventCard({ event }: { event: ScheduledItem }) {
-  const { templates, status, ruleId } = event;
+  const { templates, status } = event;
   const statusConfig = STATUS_CONFIG[status];
   const uniqueTeams = [...new Map(templates.map((t) => t.team).filter(Boolean).map((t) => [t!.id, t!])).values()];
-
   return (
-    <Group gap={12} align="flex-start">
-      {/* Colonne heure */}
-      <Stack gap={2} style={{ width: 56, flexShrink: 0, paddingTop: 14 }}>
-        <Text fz={13} fw={700} c={PRIMARY} lh={1}>{format(event.date, "HH:mm")}</Text>
-        {ruleId && <Text fz={10} c="dimmed" lh={1}>Règle #{ruleId}</Text>}
-      </Stack>
+    <Paper bd="1px solid rgba(4,52,109,0.1)" bdrs={12} style={{ overflow: "hidden" }}>
+      {/* Header */}
+      <Group justify="space-between" px={12} pt={12} pb={10} wrap="nowrap">
+        <Group gap={8} wrap="nowrap" style={{ minWidth: 0 }}>
+          <Text fz={15} fw={800} c={PRIMARY} lh={1} style={{ flexShrink: 0 }}>
+            {format(event.date, "HH:mm")}
+          </Text>
+          <Box style={{ width: 1, height: 14, backgroundColor: "rgba(4,52,109,0.15)", flexShrink: 0 }} />
+          <Group gap={4} style={{ minWidth: 0, overflow: "hidden" }}>
+            {uniqueTeams.map((t) => <BadgeTeam key={t.id} teamData={t} />)}
+          </Group>
+        </Group>
+        
+      </Group>
 
-      {/* Card */}
-      <Paper flex={1} bd="1px solid rgba(4,52,109,0.1)" bdrs={12} style={{ overflow: "hidden" }}>
-        {/* Corps */}
-        <Group gap={12} p={12} align="flex-start">
-          <Stack gap={8} style={{ flex: 1, minWidth: 0 }}>
-            <Group gap={6} wrap="wrap">
-              {uniqueTeams.map((t) => <BadgeTeam key={t.id} teamData={t} />)}
-            </Group>
-            <Stack gap={4}>
-              {templates.map((t) => (
-                <Group key={t.id} gap={6} align="center">
-                  <Text fz={13} fw={600} c={PRIMARY} lh={1}>{t.name}</Text>
-                  <Badge size="xs" radius="xl" variant="light">{t.visualType}</Badge>
-                </Group>
-              ))}
-            </Stack>
-          </Stack>
+      {/* Grille de visuels */}
 
-          {/* Thumbnails */}
-          <Group gap={4} wrap="nowrap" style={{ flexShrink: 0 }}>
-            {templates.slice(0, 2).map((t, i) => (
-              <Image key={i} src={t.thumbnail} alt={t.name} w={64} h={64} radius={8} style={{ objectFit: "cover" }} />
-            ))}
-            {templates.length > 2 && (
-              <Box w={64} h={64} style={{ borderRadius: 8, backgroundColor: "rgba(4,52,109,0.06)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <Text fz={12} fw={700} c="dimmed">+{templates.length - 2}</Text>
+        <SimpleGrid px={12} pb={10} cols={templates.length === 1 ? 1 : 2} spacing={8} style={{ alignItems: "end" }}>
+          {templates.map((t, i) => (
+            <Stack key={i} gap={4} align={templates.length === 1 ? "center" : "stretch"}>
+              <Box style={{ position: "relative", display: "inline-block" }}>
+                <Image
+                  src={t.thumbnail}
+                  alt={t.name}
+                  w={templates.length === 1 ? "auto" : "100%"}
+                  mah={300}
+                  radius={8}
+                />
+                <Badge
+                  size="xs"
+                  radius="xl"
+                  color="brand"
+                  style={{
+                    position: "absolute",
+                    top: 8,
+                    left: 8,
+                  }}
+                >
+                  {t.visualType}
+                </Badge>
               </Box>
-            )}
-          </Group>
-        </Group>
+              <Group gap={4} align="center">
+                <Box w={6} h={6} style={{ borderRadius: "50%", backgroundColor: t.team?.color ?? PRIMARY, flexShrink: 0 }} />
+                <Text fz={11} fw={600} c={PRIMARY} lh={1} truncate>{t.name}</Text>
+              </Group>
+            </Stack>
+          ))}
+        </SimpleGrid>
 
-        {/* Footer */}
-        <Group justify="space-between" px={12} py={8} style={{ borderTop: "1px solid rgba(4,52,109,0.07)", backgroundColor: "rgba(4,52,109,0.02)" }}>
-          <Badge size="sm" radius="xl" color={statusConfig.color} variant="light">{statusConfig.label}</Badge>
-          <Group gap={6}>
-            {status === "upcoming" && (
-              <Badge size="sm" radius="xl" color={PRIMARY} variant="filled" leftSection={<IconPlayerPlay size={10} />} style={{ cursor: "pointer" }}>
-                Publier maintenant
-              </Badge>
-            )}
-            <ActionIcon size="sm" variant="subtle" color="gray"><IconEdit size={14} /></ActionIcon>
-            <Menu position="bottom-end" shadow="sm">
-              <Menu.Target>
-                <ActionIcon size="sm" variant="subtle" color="gray"><IconDots size={14} /></ActionIcon>
-              </Menu.Target>
-              <Menu.Dropdown>
-                <Menu.Item>Reprogrammer</Menu.Item>
-                <Menu.Item color="red">Supprimer</Menu.Item>
-              </Menu.Dropdown>
-            </Menu>
-          </Group>
-        </Group>
-      </Paper>
-    </Group>
+      {/* Footer */}
+      <Group justify="space-between" px={12} py={8} style={{ borderTop: "1px solid rgba(4,52,109,0.07)", backgroundColor: "rgba(4,52,109,0.02)" }}>
+      <Badge size="sm" radius="xl" color={statusConfig.color} variant="light" style={{ flexShrink: 0 }}>
+          {statusConfig.label}
+        </Badge>
+        <Menu position="bottom-end" shadow="sm">
+          <Menu.Target>
+            <ActionIcon size="sm" variant="subtle" color="gray"><IconDots size={16} /></ActionIcon>
+          </Menu.Target>
+          <Menu.Dropdown>
+            <Menu.Item>Reprogrammer</Menu.Item>
+            <Menu.Item color="red">Supprimer</Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
+      </Group>
+    </Paper>
   );
 }
 
 // ─── Vue agenda ───────────────────────────────────────────
-const DEFAULT_EVENTS = scheduledItems;
-
-interface Props {
-  date: Date;
-  events?: ScheduledItem[];
-}
-
-export function SchedulerAgendaView({ events = DEFAULT_EVENTS }: Props) {
+export function SchedulerAgendaView({ date, events = scheduledItems }: { date: Date; events?: ScheduledItem[] }) {
   const grouped = useMemo(() => {
     const map = new Map<string, { date: Date; events: ScheduledItem[] }>();
     const sorted = [...events].sort((a, b) => a.date.getTime() - b.date.getTime());
@@ -115,12 +106,17 @@ export function SchedulerAgendaView({ events = DEFAULT_EVENTS }: Props) {
     return [...map.values()];
   }, [events]);
 
+  useEffect(() => {
+    const key = format(date, "yyyy-MM-dd");
+    document.getElementById(`agenda-day-${key}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [date]);
+
   return (
     <Stack gap={24}>
-      {grouped.map(({ date, events: dayEvents }) => (
-        <Stack key={date.toISOString()} gap={12}>
-          <Text fz={14} fw={700} c={PRIMARY} style={{ textTransform: "capitalize" }}>
-            {getDayLabel(date)}
+      {grouped.map(({ date: dayDate, events: dayEvents }) => (
+        <Stack key={dayDate.toISOString()} id={`agenda-day-${format(dayDate, "yyyy-MM-dd")}`} gap={10}>
+          <Text fz={13} fw={700} c={`${PRIMARY}80`} tt="uppercase">
+            {getDayLabel(dayDate)}
           </Text>
           {dayEvents.map((event) => (
             <AgendaEventCard key={event.id} event={event} />

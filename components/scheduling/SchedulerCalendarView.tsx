@@ -37,7 +37,7 @@ function navigate(date: Date, view: ViewType, dir: 1 | -1): Date {
 
 export function SchedulerCalendarView() {
   const isMobile = useIsMobile();
-  const [view, setView] = useState<ViewType>("week");
+  const [view, setView] = useState<ViewType>("agenda");
   const effectiveView: ViewType = isMobile ? "agenda" : view;
   const [date, setDate] = useState(() => new Date());
   const [selectedTeams, setSelectedTeams] = useState<Set<string>>(
@@ -88,8 +88,9 @@ export function SchedulerCalendarView() {
       <Stack
         gap={0}
         bd="1px solid rgba(4,52,109,0.1)"
-        bdrs={16}
+        bdrs={isMobile ? 0 : 16}
         bg="white"
+        mx={isMobile ? -24 : 0}
         style={{ overflow: "hidden", boxShadow: "0 2px 12px rgba(4,52,109,0.06)", height: "calc(100vh - 200px)" }}
       >
         {/* Toolbar */}

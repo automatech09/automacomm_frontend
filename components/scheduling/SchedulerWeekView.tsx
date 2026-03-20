@@ -5,6 +5,7 @@ import { addDays, format, isSameDay, isToday, startOfWeek } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Box, Center, Group, Stack, Text } from "@mantine/core";
 import type { ScheduledItem } from "@/lib/mockupdata/scheduler/data";
+import { COLORS } from "@/lib/constants/colors";
 import { CalendarEventCard } from "./CalendarEventCard";
 
 // ─── Constantes ───────────────────────────────────────────
@@ -17,7 +18,7 @@ const MIN_SLOT_HEIGHT = 48;
 const TIME_COL = 52;
 const HOURS = Array.from({ length: HOUR_END - HOUR_START }, (_, i) => HOUR_START + i);
 
-const PRIMARY = "#04346D";
+const PRIMARY = COLORS.primary;
 const BORDER_LIGHT = "rgba(4,52,109,0.06)";  // séparateurs horizontaux
 const BORDER_MID = "rgba(4,52,109,0.07)";    // séparateurs verticaux
 const BORDER_HEADER = "rgba(4,52,109,0.08)"; // bas du header

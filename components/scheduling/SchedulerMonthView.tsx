@@ -4,8 +4,9 @@ import { useMemo, useState } from "react";
 import { addDays, format, isSameDay, isSameMonth, isToday, startOfMonth, startOfWeek } from "date-fns";
 import { Box, Center, Group, Stack, Text } from "@mantine/core";
 import type { ScheduledItem } from "@/lib/mockupdata/scheduler/data";
+import { COLORS } from "@/lib/constants/colors";
 import { CalendarEventCard } from "./CalendarEventCard";
-
+  
 // ─── Constantes ───────────────────────────────────────────
 const MAX_VISIBLE = 2;
 const CARD_HEIGHT = 36;
@@ -13,7 +14,7 @@ const CARD_GAP = 4;
 const DAY_HEADER_HEIGHT = 30;
 const CELL_PADDING = 6;
 
-const PRIMARY = "#04346D";
+const PRIMARY = COLORS.primary;
 const COL_BORDER = "rgba(4,52,109,0.07)";
 const ROW_BORDER = "rgba(4,52,109,0.08)";
 

@@ -15,12 +15,14 @@ import {
 } from "@tabler/icons-react";
 import type { ScheduleRule } from "@/types";
 import type { NetworkType } from "@/types/publication";
+import { COLORS } from "@/lib/constants/colors";
+import { VISUAL_CONFIG as BASE_VISUAL_CONFIG } from "@/lib/constants/scheduler";
 
 const VISUAL_CONFIG: Record<string, { color: string; bg: string; Icon: TablerIcon }> = {
-  Résultat: { color: "#0A5EBF", bg: "#E8F4FF", Icon: IconTrophy },
-  Classement: { color: "#D4640A", bg: "#FFF3E8", Icon: IconChartBar },
-  Affiche: { color: "#7A0FB0", bg: "#F3EEFB", Icon: IconLayout },
-  "Score en direct": { color: "#0F9B58", bg: "#EEFBF3", Icon: IconWifi },
+  Résultat:          { ...BASE_VISUAL_CONFIG.Résultat,          Icon: IconTrophy },
+  Classement:        { ...BASE_VISUAL_CONFIG.Classement,        Icon: IconChartBar },
+  Affiche:           { ...BASE_VISUAL_CONFIG.Affiche,           Icon: IconLayout },
+  "Score en direct": { ...BASE_VISUAL_CONFIG["Score en direct"], Icon: IconWifi },
 };
 
 const MOMENT_PHRASES: Record<string, string> = {
@@ -64,7 +66,7 @@ interface RuleCardProps {
 }
 
 export function RuleCard({ rule, onToggle, onEdit, onEditTemplate }: RuleCardProps) {
-  const config = VISUAL_CONFIG[rule.visualType] ?? { color: "#04346D", bg: "#EEF2FF", Icon: IconLayout };
+  const config = VISUAL_CONFIG[rule.visualType] ?? { color: COLORS.primary, bg: "#EEF2FF", Icon: IconLayout };
   const { Icon } = config;
   const phrase = MOMENT_PHRASES[rule.moment] ?? rule.moment;
 

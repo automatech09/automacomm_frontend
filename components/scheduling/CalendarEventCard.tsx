@@ -4,33 +4,14 @@ import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Badge, Box, Group, Image, Modal, Stack, Text, Tooltip } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import type { VisualType } from "@/types/template";
 import type { ScheduledItem } from "@/lib/mockupdata/scheduler/data";
 import { BadgeStoryOrPost } from "@/components/common/BadgeStoryPost";
 import { BadgeTeam } from "../teams/BadgeTeam";
 import { Carousel } from "@/components/common/Carousel";
-import { COLORS } from "@/lib/constants/colors";
+import { VISUAL_CONFIG } from "@/lib/constants/scheduler";
+import { getUniqueTeams, getEventColor } from "@/lib/utils/scheduler";
 
-export const VISUAL_CONFIG: Record<VisualType, { color: string; bg: string }> = {
-  Résultat: { color: "#0A5EBF", bg: "#E8F4FF" },
-  Classement: { color: "#D4640A", bg: "#FFF3E8" },
-  Affiche: { color: "#7A0FB0", bg: "#F3EEFB" },
-  "Score en direct": { color: "#0F9B58", bg: "#EEFBF3" },
-};
-
-const NEUTRAL = COLORS.primary;
-
-function getUniqueTeams(event: ScheduledItem) {
-  const seen = new Set<string>();
-  return event.templates
-    .map((t) => t.team)
-    .filter((t): t is NonNullable<typeof t> => !!t && !seen.has(t.id) && !!seen.add(t.id));
-}
-
-function getEventColor(event: ScheduledItem): string {
-  const teams = getUniqueTeams(event);
-  return teams.length === 1 ? teams[0].color : NEUTRAL;
-}
+export { VISUAL_CONFIG };
 
 function EventTooltipLabel({ event }: { event: ScheduledItem }) {
   const teams = getUniqueTeams(event);
