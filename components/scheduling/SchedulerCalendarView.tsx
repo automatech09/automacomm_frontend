@@ -10,6 +10,8 @@ import { getDay, parse } from "date-fns";
 import { scheduledItems, toCalendarEvents, type CalendarEvent } from "@/lib/mockupdata/scheduler/data";
 import { CalendarEventCard } from "@/components/scheduling/CalendarEventCard";
 import { SchedulerWeekView } from "@/components/scheduling/SchedulerWeekView";
+import { SchedulerMonthView } from "@/components/scheduling/SchedulerMonthView";
+import { initialTeams } from "@/lib/mockupdata/teams/data";
 
 type ViewType = "week" | "month" | "agenda";
 
@@ -56,16 +58,58 @@ function navigate(date: Date, view: ViewType, dir: 1 | -1): Date {
 export function SchedulerCalendarView() {
   const [view, setView] = useState<ViewType>("week");
   const [date, setDate] = useState(() => new Date());
-  const events = useMemo(() => toCalendarEvents(scheduledItems), []);
+  const [selectedTeams, setSelectedTeams] = useState<Set<string>>(
+    () => new Set(initialTeams.map((t) => t.id))
+  );
+  const allEvents = useMemo(() => toCalendarEvents(scheduledItems), []);
+  const events = useMemo(
+    () => allEvents.filter((e) => e.resource.templates.some((t) => t.team && selectedTeams.has(t.team.id))),
+    [allEvents, selectedTeams]
+  );
+
+  function toggleTeam(id: string) {
+    setSelectedTeams((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }
 
   return (
+    <Stack gap={12}>
+      {/* Légende / filtre équipes */}
+      <Group gap={8}>
+        {initialTeams.map((team) => {
+          const active = selectedTeams.has(team.id);
+          return (
+            <Text
+              key={team.id}
+              fz={11}
+              fw={600}
+              c={active ? team.color : "rgba(4,52,109,0.3)"}
+              px={8}
+              py={4}
+              style={{
+                borderRadius: 6,
+                backgroundColor: active ? `${team.color}20` : "rgba(4,52,109,0.04)",
+                border: `1px solid ${active ? team.color : "rgba(4,52,109,0.1)"}`,
+                cursor: "pointer",
+                transition: "all 120ms ease",
+              }}
+              onClick={() => toggleTeam(team.id)}
+            >
+              {team.name}
+            </Text>
+          );
+        })}
+      </Group>
+
     <Stack
       gap={0}
-      h="80vh"
       bd="1px solid rgba(4,52,109,0.1)"
       bdrs={16}
       bg="white"
-      style={{ overflow: "hidden", boxShadow: "0 2px 12px rgba(4,52,109,0.06)" }}
+      style={{ overflow: "hidden", boxShadow: "0 2px 12px rgba(4,52,109,0.06)", height: "calc(100vh - 200px)" }}
     >
       {/* Toolbar */}
       <Group justify="space-between" px={16} py={10} style={{ borderBottom: "1px solid rgba(4,52,109,0.08)", flexShrink: 0 }}>
@@ -82,7 +126,7 @@ export function SchedulerCalendarView() {
         </Group>
 
         <Text fz={14} fw={600} c="#04346D">
-          {getLabel(date, view)}
+          {getLabel(date, view).toUpperCase()}
         </Text>
 
         <Button.Group>
@@ -105,11 +149,13 @@ export function SchedulerCalendarView() {
       <Box style={{ flex: 1, overflow: "hidden" }}>
         {view === "week" ? (
           <SchedulerWeekView date={date} events={events} />
+        ) : view === "month" ? (
+          <SchedulerMonthView date={date} events={events} />
         ) : (
           <Calendar
             localizer={localizer}
             events={events}
-            view={view === "month" ? Views.MONTH : Views.AGENDA}
+            view={Views.AGENDA}
             date={date}
             onNavigate={setDate}
             culture="fr"
@@ -120,6 +166,7 @@ export function SchedulerCalendarView() {
           />
         )}
       </Box>
+    </Stack>
     </Stack>
   );
 }
