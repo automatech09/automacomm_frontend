@@ -1,36 +1,39 @@
 "use client";
 
-import { useState } from "react";
-import dynamic from "next/dynamic";
-import { ActionIcon, Box, Button, Group, Skeleton, Tabs, Title } from "@mantine/core";
+import { useEffect, useState } from "react";
+import { ActionIcon, Button, Group, Skeleton, Stack, Tabs, Title } from "@mantine/core";
 import { IconCalendar, IconPlus, IconSettings } from "@tabler/icons-react";
 import { notifications } from "@mantine/notifications";
-import { SchedulerRulesView } from "@/components/scheduling/SchedulerRulesView";
-
-const SchedulerCalendarView = dynamic(
-  () => import("@/components/scheduling/SchedulerCalendarView").then((m) => ({ default: m.SchedulerCalendarView })),
-  {
-    ssr: false,
-    loading: () => (
-      <Box>
-        <Skeleton height={40} radius="xl" mb="md" />
-        <Skeleton height={620} radius="xl" />
-      </Box>
-    ),
-  }
-);
+import { initialTeams } from "@/lib/mockupdata/teams/data";
+import { TeamFilterPills } from "@/components/scheduling/TeamFilterPills";
+import { SchedulerCalendarView } from "@/components/scheduling/SchedulerCalendarView";
+import { SchedulerRulesView } from "@/components/scheduling/rules/SchedulerRulesView";
 
 export default function SchedulingPage() {
+  const [mounted, setMounted] = useState(false);
   const [tab, setTab] = useState<string | null>("calendar");
+  const [selectedTeams, setSelectedTeams] = useState<Set<string>>(
+    () => new Set(initialTeams.map((t) => t.id))
+  );
+
+  useEffect(() => { setMounted(true); }, []);
+
+  function toggleTeam(id: string) {
+    setSelectedTeams((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }
 
   return (
     <Tabs value={tab} onChange={setTab} variant="pills" radius="xl">
-      <Group justify="space-between" align="center" mb="lg">
+      <Group justify="space-between" align="center" mb="sm">
         <Group align="center" gap="lg">
           <Title order={1} c="brand.7" fz="1.4rem" visibleFrom="sm">Planification</Title>
           <Tabs.List>
             <Tabs.Tab value="calendar" leftSection={<IconCalendar size={15} />}>Calendrier</Tabs.Tab>
-            <Tabs.Tab value="rules" leftSection={<IconSettings size={15} />}>Règles</Tabs.Tab>
+            <Tabs.Tab value="rules" leftSection={<IconSettings size={15} />}>Publications</Tabs.Tab>
           </Tabs.List>
         </Group>
         {tab === "calendar" && (
@@ -56,11 +59,24 @@ export default function SchedulingPage() {
         )}
       </Group>
 
+      <Stack gap="md" mb="lg">
+        <TeamFilterPills teams={initialTeams} selectedIds={selectedTeams} onToggle={toggleTeam} />
+      </Stack>
+
       <Tabs.Panel value="calendar">
-        <SchedulerCalendarView />
+        {mounted ? <SchedulerCalendarView selectedTeams={selectedTeams} /> : (
+          <Stack gap="md">
+            <Skeleton height={40} radius="md" />
+            <Skeleton height="calc(100vh - 260px)" radius="xl" />
+          </Stack>
+        )}
       </Tabs.Panel>
       <Tabs.Panel value="rules">
-        <SchedulerRulesView />
+        {mounted ? <SchedulerRulesView selectedTeams={selectedTeams} /> : (
+          <Stack gap="sm">
+            {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} height={80} radius="xl" />)}
+          </Stack>
+        )}
       </Tabs.Panel>
     </Tabs>
   );

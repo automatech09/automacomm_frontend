@@ -1,5 +1,5 @@
 import { COLORS } from "@/lib/constants/colors";
-import type { ScheduledItem } from "@/lib/mockupdata/scheduler/data";
+import { ScheduledItem } from "@/types";
 
 export function getUniqueTeams(item: ScheduledItem) {
   const seen = new Set<string>();

@@ -1,15 +1,8 @@
 import type { Template } from "@/types/template";
 import type { NetworkType } from "@/types/publication";
 import { initialTemplates } from "@/lib/mockupdata/templates/data";
+import { ScheduledItem } from "@/types";
 
-export interface ScheduledItem {
-  id: string;
-  date: Date;
-  templates: Template[];
-  platforms: NetworkType;
-  status: "upcoming" | "published" | "error";
-  ruleId?: string;
-}
 
 // ─── Références aux templates existants ──────────────────
 const T_RESULTAT_EQ1     = initialTemplates.find((t) => t.id === 1)!;

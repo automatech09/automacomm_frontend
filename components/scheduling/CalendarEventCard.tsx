@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Badge, Box, Group, Image, Modal, Stack, Text, Tooltip } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import type { ScheduledItem } from "@/lib/mockupdata/scheduler/data";
+import { ScheduledItem } from "@/types";
 import { BadgeStoryOrPost } from "@/components/common/BadgeStoryPost";
 import { BadgeTeam } from "../teams/BadgeTeam";
 import { Carousel } from "@/components/common/Carousel";

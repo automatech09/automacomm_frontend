@@ -1,28 +1,15 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import {
-  Badge,
-  Box,
-  Button,
-  Group,
-  Image,
-  Paper,
-  SimpleGrid,
-  Stack,
-  Text,
-  Title,
-  UnstyledButton,
-} from "@mantine/core";
+import { Box, Button, Group, Stack, Text, Title, UnstyledButton } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { IconBolt, IconPlus } from "@tabler/icons-react";
-import { BadgeTeam } from "@/components/teams/BadgeTeam";
+import { IconPlus } from "@tabler/icons-react";
 import { CreateTemplateModal } from "@/components/templates/CreateTemplateModal";
 import { TemplateDetailsModal } from "@/components/templates/TemplateDetailsModal";
 import type { CreateTemplatePayload, Template, TemplateTeamFilter } from "@/types";
 import { initialTemplates } from "@/lib/mockupdata/templates/data";
 import { teamUIColors, templateTeamTabs } from "@/lib/constants/templates";
-import { BadgeStoryOrPost } from "@/components/common/BadgeStoryPost";
+import { TemplateGrid } from "@/components/common/TemplateGrid";
 
 const teamColors = teamUIColors;
 
@@ -118,54 +105,11 @@ export default function TemplatesPage() {
         })}
       </Group>
 
-      <SimpleGrid cols={{ base: 2, sm: 3, lg: 4 }} spacing="md">
-        {filteredTemplates.map((template) => (
-          <UnstyledButton key={template.id} onClick={() => setSelectedTemplate(template)}>
-            <Paper withBorder radius="lg" style={{ overflow: "hidden" }}>
-              <Box style={{ position: "relative", aspectRatio: "1 / 1" }}>
-                <Image src={template.thumbnail} alt={`Template ${template.id}`} h="100%" w="100%" fit="cover" />
-                <Group justify="space-between" style={{ position: "absolute", top: 12, left: 12, right: 12 }}>
-                  <Badge radius="xl" color="brand">{template.visualType}</Badge>
-                </Group>
-              </Box>
-              <Stack justify="space-between" py="lg" px="md">
-                <Text c="brand.7" fz="sm" fw={600}>{template.name}</Text>
-                <Group>
-                  {template.team ? <BadgeTeam teamData={template.team} /> : null}
-                  <BadgeStoryOrPost format={template.format} />
-                </Group>
-              </Stack>
-            </Paper>
-          </UnstyledButton>
-        ))}
-
-        <UnstyledButton onClick={() => setCreateOpen(true)}>
-          <Paper p="xl" radius="xl" style={{ border: "1.5px dashed rgba(4,52,109,0.22)", minHeight: 280, display: "grid", placeItems: "center", textAlign: "center", background: "white" }}>
-            <Stack align="center" gap="sm">
-              <Box w={48} h={48} style={{ borderRadius: 14, display: "grid", placeItems: "center", background: "rgba(4,52,109,0.06)" }}>
-                <IconPlus size={24} color="rgba(4,52,109,0.45)" />
-              </Box>
-              <Text c="rgba(4,52,109,0.6)" fw={500}>Nouveau template</Text>
-              <Text c="rgba(4,52,109,0.4)" fz="xs">Créer depuis zéro ou depuis un modèle</Text>
-            </Stack>
-          </Paper>
-        </UnstyledButton>
-      </SimpleGrid>
-
-      <Paper p="md" radius="xl" style={{ background: "rgba(4,52,109,0.04)", border: "1px solid rgba(4,52,109,0.08)" }}>
-        <Group justify="space-between" wrap="wrap" gap="md">
-          <Group gap="sm" wrap="nowrap">
-            <Box w={40} h={40} style={{ borderRadius: 12, display: "grid", placeItems: "center", background: "#04346D" }}>
-              <IconBolt size={20} color="white" />
-            </Box>
-            <Stack gap={2}>
-              <Text c="brand.7" fw={600} fz="sm">Builder visuel intégré</Text>
-              <Text c="rgba(4,52,109,0.55)" fz="xs">Personnalisez vos templates sans gérer de structures complexes.</Text>
-            </Stack>
-          </Group>
-          <Button bg="#04346D" radius="xl">Ouvrir le builder</Button>
-        </Group>
-      </Paper>
+      <TemplateGrid
+        templates={filteredTemplates}
+        onSelect={setSelectedTemplate}
+        onAdd={() => setCreateOpen(true)}
+      />
 
       <TemplateDetailsModal
         template={selectedTemplate}

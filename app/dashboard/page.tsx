@@ -60,7 +60,7 @@ function publicationTeams(publication: Publication) {
 }
 
 // TODO: récupérer depuis l'API — true si l'utilisateur n'a pas encore complété l'onboarding
-const IS_FIRST_TIME = false;
+const IS_FIRST_TIME = true;
 
 export default function DashboardPage() {
   const [teams, setTeams] = useState(initialTeamColors);

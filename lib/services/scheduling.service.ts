@@ -1,8 +1,8 @@
-import { SCHEDULE_RULES } from "@/lib/constants/dashboardData";
-import type { ScheduleRule } from "@/types";
+import type { Publication } from "@/types/scheduling";
+import { initialPublications } from "@/lib/mockupdata/scheduler/rules";
 
 export const schedulingService = {
-  async getAll(): Promise<ScheduleRule[]> {
-    return Promise.resolve(SCHEDULE_RULES);
+  async getAll(): Promise<Publication[]> {
+    return Promise.resolve(initialPublications);
   },
 };

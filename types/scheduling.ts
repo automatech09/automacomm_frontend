@@ -1,24 +1,33 @@
-import type { VisualType } from "./template";
+import type { Template } from "@/types/template";
 import type { NetworkType } from "./publication";
+import type { Team } from "./team";
 
-export type RuleFormat = "P" | "S";
-
-export interface TeamTag {
-  label: string;
-  borderColor: string;
+export interface PublicationDescription {
+  header?: string;
+  core: string;
+  footer?: string;
 }
 
-export interface ScheduleRule {
+export interface PublicationSchedule {
+  moment: string; // "veille_match", "jour_match", etc.
+  time: string;   // "18:00"
+}
+
+export interface Publication {
   id: string;
-  visualType: VisualType;
-  format: RuleFormat;
-  teams: TeamTag[];
+  templates: Template[];
+  teams: Team[];
+  platforms: NetworkType;
+  schedule: PublicationSchedule;
+  description?: PublicationDescription;
   active: boolean;
-  moment: string;
-  time: string;
-  platforms?: NetworkType;
-  description?: string;
-  isCustomDescription?: boolean;
-  templates: string[];
-  isCarousel?: boolean;
+}
+
+export interface ScheduledItem {
+  id: string;
+  date: Date;
+  templates: Template[];
+  platforms: NetworkType;
+  status: "upcoming" | "published" | "error";
+  ruleId?: string;
 }

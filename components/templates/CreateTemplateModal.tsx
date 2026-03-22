@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 import {
   ActionIcon,
   Badge,
-  Box,
   Button,
   Divider,
   Group,
@@ -17,25 +16,11 @@ import {
   Title,
   UnstyledButton,
 } from "@mantine/core";
-import {
-  IconChevronLeft,
-  IconCopy,
-  IconSparkles,
-  IconX,
-  type TablerIcon,
-} from "@tabler/icons-react";
-import {
-  templateCreationTeams,
-  teamUIColors,
-  visualTypeConfig,
-} from "@/lib/constants/templates";
-import type {
-  CreateTemplatePayload,
-  TeamName,
-  Template,
-  TemplateCreationStep,
-  VisualType,
-} from "@/types";
+import { IconChevronLeft, IconCopy, IconSparkles, IconX } from "@tabler/icons-react";
+import { templateCreationTeams, teamUIColors } from "@/lib/constants/templates";
+import { SelectionCard } from "@/components/common/SelectionCard";
+import { VisualTypeSelector } from "@/components/common/VisualTypeSelector";
+import type { CreateTemplatePayload, TeamName, Template, TemplateCreationStep, VisualType } from "@/types";
 
 type CreateTemplateModalProps = {
   opened: boolean;
@@ -44,35 +29,6 @@ type CreateTemplateModalProps = {
   onCreateTemplate: (payload: CreateTemplatePayload) => Promise<boolean>;
 };
 
-type StepCardProps = {
-  icon: TablerIcon;
-  title: string;
-  description: string;
-  color: string;
-  selected: boolean;
-  onClick: () => void;
-};
-
-function StepCard({
-  icon: Icon,
-  title,
-  description,
-  color,
-  selected,
-  onClick,
-}: StepCardProps) {
-  return (
-    <UnstyledButton onClick={onClick}>
-      <Paper p="md" radius="xl" style={{ border: `2px solid ${selected ? color : "transparent"}`, background: selected ? `${color}14` : "rgba(4,52,109,0.03)" }}>
-        <Box w={44} h={44} mb="sm" style={{ borderRadius: 12, display: "grid", placeItems: "center", background: `${color}20` }}>
-          <Icon size={22} color={color} />
-        </Box>
-        <Text c="brand.7" fw={600}>{title}</Text>
-        <Text c="rgba(4,52,109,0.6)" fz="xs" mt={6}>{description}</Text>
-      </Paper>
-    </UnstyledButton>
-  );
-}
 
 export function CreateTemplateModal({
   opened,
@@ -144,11 +100,11 @@ export function CreateTemplateModal({
         </Group>
 
         {step === 1 ? (
-          <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
-            {Object.entries(visualTypeConfig).map(([type, config]) => (
-              <StepCard key={type} icon={config.icon} title={type} description="Template personnalisable avec aperçu placeholder" color={config.color} selected={selectedType === type} onClick={() => setSelectedType(type as VisualType)} />
-            ))}
-          </SimpleGrid>
+          <VisualTypeSelector
+            value={selectedType}
+            onChange={setSelectedType}
+            description="Template personnalisable avec aperçu placeholder"
+          />
         ) : null}
 
         {step === 2 ? (
@@ -167,8 +123,8 @@ export function CreateTemplateModal({
         {step === 3 ? (
           <Stack gap="sm">
             <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
-              <StepCard icon={IconSparkles} title="Partir de zéro" description="Page vierge dans le builder" color="#04346D" selected={startFromScratch === true} onClick={() => setStartFromScratch(true)} />
-              <StepCard icon={IconCopy} title="Partir d'un template" description={`${existingOfSelectedType.length} modèles disponibles`} color="#FF6B35" selected={startFromScratch === false} onClick={() => setStartFromScratch(false)} />
+              <SelectionCard icon={IconSparkles} title="Partir de zéro" description="Page vierge dans le builder" color="#04346D" selected={startFromScratch === true} onClick={() => setStartFromScratch(true)} />
+              <SelectionCard icon={IconCopy} title="Partir d'un template" description={`${existingOfSelectedType.length} modèles disponibles`} color="#FF6B35" selected={startFromScratch === false} onClick={() => setStartFromScratch(false)} />
             </SimpleGrid>
             {startFromScratch === false ? (
               <Stack gap="xs">
