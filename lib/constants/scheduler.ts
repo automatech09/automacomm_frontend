@@ -1,22 +1,15 @@
 import type { VisualType } from "@/types/template";
 
-export const MOMENT_OPTIONS: { value: string; label: string }[] = [
-  { value: "J-4", label: "4 jours avant le match" },
-  { value: "J-3", label: "3 jours avant le match" },
-  { value: "J-2", label: "2 jours avant le match" },
-  { value: "J-1 (veille du match)", label: "Veille du match" },
-  { value: "Jour J", label: "Jour du match" },
-  { value: "J+1 (lendemain)", label: "Lendemain du match" },
-  { value: "J+2", label: "2 jours après le match" },
-  { value: "J+3", label: "3 jours après le match" },
-  { value: "J+4", label: "4 jours après le match" },
-  { value: "Lundi", label: "Chaque lundi" },
-  { value: "Mardi", label: "Chaque mardi" },
-  { value: "Mercredi", label: "Chaque mercredi" },
-  { value: "Jeudi", label: "Chaque jeudi" },
-  { value: "Vendredi", label: "Chaque vendredi" },
-  { value: "Samedi", label: "Chaque samedi" },
-  { value: "Dimanche", label: "Chaque dimanche" },
+export const MATCH_OPTIONS = [
+  { value: "J-4", label: "J-4" },
+  { value: "J-3", label: "J-3" },
+  { value: "J-2", label: "J-2" },
+  { value: "J-1 (veille du match)", label: "Veille" },
+  { value: "Jour J", label: "Jour J" },
+  { value: "J+1 (lendemain)", label: "Lend." },
+  { value: "J+2", label: "J+2" },
+  { value: "J+3", label: "J+3" },
+  { value: "J+4", label: "J+4" },
 ];
 
 export const VISUAL_CONFIG: Record<VisualType, { color: string; bg: string }> = {

@@ -2,19 +2,19 @@
 
 import { useEffect, useMemo, useState } from "react";
 import {
-  Box, Button, Group, Modal, Paper, ScrollArea, Select,
-  Stack, Stepper, Text, TextInput, UnstyledButton,
+  Badge, Box, Button, Group, Modal, Paper, Popover, ScrollArea,
+  Stack, Stepper, Text, UnstyledButton,
 } from "@mantine/core";
-import { IconCalendar, IconClock, IconDeviceMobile, IconLayoutGrid } from "@tabler/icons-react";
+import { IconDeviceMobile, IconLayoutGrid } from "@tabler/icons-react";
+import { PublicationConfirmCard } from "./PublicationConfirmCard";
 import { TemplateGrid } from "@/components/common/TemplateGrid";
 import { VisualTypeSelector } from "@/components/common/VisualTypeSelector";
-import { DescriptionStep } from "@/components/scheduling/rules/description/DescriptionStep";
+import { DescriptionStep } from "./description/DescriptionStep";
+import { PlanificationStep } from "./PlanificationStep";
 import type { Publication, PublicationDescription } from "@/types/scheduling";
-import type { NetworkType } from "@/types/publication";
 import type { Team } from "@/types/team";
 import type { TemplateFormat, VisualType } from "@/types/template";
 import { initialTemplates } from "@/lib/mockupdata/templates/data";
-import { MOMENT_OPTIONS } from "@/lib/constants/scheduler";
 
 const STEPS = ["Type", "Visuels", "Description", "Planification"];
 
@@ -27,7 +27,6 @@ const EMPTY_FORM = {
   footer: "",
   moment: "Jour J",
   time: "18:00",
-  platforms: "both" as NetworkType,
 };
 
 function teamsFromTemplateIds(ids: number[]): Team[] {
@@ -49,7 +48,6 @@ function fromPublication(p: Publication): typeof EMPTY_FORM {
     footer: p.description?.footer ?? "",
     moment: p.schedule.moment,
     time: p.schedule.time,
-    platforms: p.platforms,
   };
 }
 
@@ -63,7 +61,7 @@ function toPublication(id: string, form: typeof EMPTY_FORM, active: boolean): Pu
         ...(form.footer.trim() && { footer: form.footer }),
       }
     : undefined;
-  return { id, templates, teams, platforms: form.platforms, schedule: { moment: form.moment, time: form.time }, description, active };
+  return { id, templates, teams, schedule: { moment: form.moment, time: form.time }, description, active };
 }
 
 interface Props {
@@ -110,6 +108,8 @@ export function PublicationDrawer({ open, publication, onClose, onSave }: Props)
     setStep((s) => (s === 3 && isStory ? 1 : s - 1));
   }
 
+  const confirmTeams = teamsFromTemplateIds(form.templateIds);
+
   function handleTemplateSelect(id: number) {
     setForm((f) => ({
       ...f,
@@ -123,7 +123,8 @@ export function PublicationDrawer({ open, publication, onClose, onSave }: Props)
 
   function handleSave() {
     const id = publication?.id ?? crypto.randomUUID();
-    onSave(toPublication(id, form, publication?.active ?? true));
+    const result = toPublication(id, form, publication?.active ?? true);
+    onSave(result);
     onClose();
   }
 
@@ -141,7 +142,7 @@ export function PublicationDrawer({ open, publication, onClose, onSave }: Props)
           {STEPS.map((label, i) => <Stepper.Step key={i} label={label} />)}
         </Stepper>
 
-        <ScrollArea>
+        <ScrollArea h={`60vh`}>
           {step === 0 && (
             <Stack gap="lg">
               <Stack gap="xs">
@@ -184,11 +185,29 @@ export function PublicationDrawer({ open, publication, onClose, onSave }: Props)
           )}
 
           {step === 1 && (
-            <TemplateGrid
-              templates={filteredTemplates}
-              onSelect={(t) => handleTemplateSelect(t.id)}
-              selectedIds={form.templateIds}
-            />
+            <Stack gap="md">
+              <Group gap={4} align="center" >
+                {isStory ? (
+                  <>
+                    <Text span size='sm' fw={300} c="dark.2"> Sélectionnez un visuel pour votre story</Text>
+                    </>
+                ) : (
+                  <>
+                      <Text span size='sm' fw={300} c="dark.2"> Sélectionnez un ou plusieurs visuels pour votre publication </Text>
+                    {form.templateIds.length > 1 && (
+                      <Badge radius="xl" color="brand" variant="light" size="sm">
+                         Carousel - {form.templateIds.length} visuels
+                      </Badge>
+                    )}
+                  </>
+                )}
+              </Group>
+              <TemplateGrid
+                templates={filteredTemplates}
+                onSelect={(t) => handleTemplateSelect(t.id)}
+                selectedIds={form.templateIds}
+              />
+            </Stack>
           )}
 
           {step === 2 && (
@@ -203,7 +222,7 @@ export function PublicationDrawer({ open, publication, onClose, onSave }: Props)
           )}
 
           {step === 3 && (
-            <Stack gap="xl">
+            <Stack gap="lg">
               {form.templateIds.length > 0 && (
                 <Stack gap="xs">
                   <Text fz="sm" fw={600} c="dark.5">
@@ -216,27 +235,12 @@ export function PublicationDrawer({ open, publication, onClose, onSave }: Props)
                 </Stack>
               )}
 
-              <Group grow align="flex-start">
-                <Select
-                  label="Moment de publication"
-                  data={MOMENT_OPTIONS}
-                  value={form.moment}
-                  onChange={(v) => v && update("moment", v)}
-                  radius="lg"
-                  size="md"
-                  leftSection={<IconCalendar size={16} />}
-                />
-                <TextInput
-                  label="Heure"
-                  placeholder="18:00"
-                  value={form.time}
-                  onChange={(e) => update("time", e.target.value)}
-                  radius="lg"
-                  size="md"
-                  leftSection={<IconClock size={16} />}
-                  style={{ maxWidth: 160 }}
-                />
-              </Group>
+              <PlanificationStep
+                moment={form.moment}
+                time={form.time}
+                onMomentChange={(v) => update("moment", v)}
+                onTimeChange={(v) => update("time", v)}
+              />
             </Stack>
           )}
         </ScrollArea>
@@ -248,15 +252,34 @@ export function PublicationDrawer({ open, publication, onClose, onSave }: Props)
           {step < STEPS.length - 1 ? (
             <Button
               radius="xl"
-              disabled={step === 0 && (!form.format || !form.visualType)}
+              disabled={(step === 0 && (!form.format || !form.visualType)) || (step === 1 && form.templateIds.length === 0)}
               onClick={nextStep}
             >
               Suivant
             </Button>
           ) : (
-            <Button radius="xl" color="green" onClick={handleSave}>
-              {publication ? "Enregistrer" : "Créer la publication"}
-            </Button>
+            <Popover width={340} radius="xl" shadow="md" withArrow position="top-end">
+              <Popover.Target>
+                <Button radius="xl" color="green">
+                  {publication ? "Enregistrer" : "Créer la publication"}
+                </Button>
+              </Popover.Target>
+              <Popover.Dropdown p="lg">
+                <Stack gap="md">
+                  <PublicationConfirmCard
+                    templateIds={form.templateIds}
+                    teams={confirmTeams}
+                    moment={form.moment}
+                    time={form.time}
+                    format={form.format}
+                    visualType={form.visualType}
+                  />
+                  <Button radius="xl" color="green" fullWidth onClick={handleSave}>
+                    Confirmer
+                  </Button>
+                </Stack>
+              </Popover.Dropdown>
+            </Popover>
           )}
         </Group>
       </Stack>

@@ -10,19 +10,21 @@ import { BackgroundCard } from "@/components/backgrounds/BackgroundCard";
 import { UploadModal } from "@/components/backgrounds/UploadModal";
 import { EditBackgroundModal } from "@/components/backgrounds/EditBackgroundModal";
 import { usedBackgrounds, reserveBackgroundUrls } from "@/lib/mockupdata/backgrounds/data";
-import { teamUIColors } from "@/lib/constants/templates";
 import type { Template } from "@/types";
 import { initialTemplates } from "@/lib/mockupdata/templates/data";
+import { initialTeams } from "@/lib/mockupdata/teams/data";
 
 const TABS = ["Vos prochains arrière-plans", "Arrière-plans utilisés", "Réserve aléatoire"] as const;
-const TEAM_FILTERS = ["Tous", "Équipe 1", "Réserve", "U18"] as const;
+const TEAM_FILTERS = [
+  { label: "Tous", color: "#04346D" },
+  ...initialTeams.map((t) => ({ label: t.name, color: t.color })),
+];
 
 type TabIndex = 0 | 1 | 2;
-type TeamFilter = (typeof TEAM_FILTERS)[number];
 
 export default function BackgroundsPage() {
   const [activeTab, setActiveTab] = useState<TabIndex>(0);
-  const [teamFilter, setTeamFilter] = useState<TeamFilter>("Tous");
+  const [teamFilter, setTeamFilter] = useState("Tous");
   const [uploadOpen, setUploadOpen] = useState(false);
   const [editing, setEditing] = useState<{ template: Template } | null>(null);
   const [reserveUrls, setReserveUrls] = useState<string[]>(reserveBackgroundUrls);
@@ -64,17 +66,16 @@ export default function BackgroundsPage() {
       {activeTab === 0 && (
         <Stack gap="md">
           <Group gap="sm" style={{ borderBottom: "1px solid rgba(4,52,109,0.1)" }}>
-            {TEAM_FILTERS.map((filter) => {
-              const isActive = filter === teamFilter;
-              const color = filter === "Tous" ? "#04346D" : teamUIColors[filter as keyof typeof teamUIColors]?.text ?? "#04346D";
+            {TEAM_FILTERS.map(({ label, color }) => {
+              const isActive = label === teamFilter;
               return (
                 <UnstyledButton
-                  key={filter}
-                  onClick={() => setTeamFilter(filter)}
+                  key={label}
+                  onClick={() => setTeamFilter(label)}
                   px="md" py="sm"
                   style={{ position: "relative", color: isActive ? color : "rgba(4,52,109,0.5)", fontWeight: isActive ? 600 : 500 }}
                 >
-                  <Text fz="sm">{filter}</Text>
+                  <Text fz="sm">{label}</Text>
                   {isActive && <Box style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: 2, background: color }} />}
                 </UnstyledButton>
               );

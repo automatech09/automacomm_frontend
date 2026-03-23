@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { ActionIcon, Button, Group, Skeleton, Stack, Tabs, Title } from "@mantine/core";
 import { IconCalendar, IconPlus, IconSettings } from "@tabler/icons-react";
-import { notifications } from "@mantine/notifications";
 import { initialTeams } from "@/lib/mockupdata/teams/data";
 import { TeamFilterPills } from "@/components/scheduling/TeamFilterPills";
 import { SchedulerCalendarView } from "@/components/scheduling/SchedulerCalendarView";
@@ -12,6 +11,7 @@ import { SchedulerRulesView } from "@/components/scheduling/rules/SchedulerRules
 export default function SchedulingPage() {
   const [mounted, setMounted] = useState(false);
   const [tab, setTab] = useState<string | null>("calendar");
+  const [createOpen, setCreateOpen] = useState(false);
   const [selectedTeams, setSelectedTeams] = useState<Set<string>>(
     () => new Set(initialTeams.map((t) => t.id))
   );
@@ -36,27 +36,23 @@ export default function SchedulingPage() {
             <Tabs.Tab value="rules" leftSection={<IconSettings size={15} />}>Publications</Tabs.Tab>
           </Tabs.List>
         </Group>
-        {tab === "calendar" && (
-          <>
-            <Button
-              visibleFrom="sm"
-              leftSection={<IconPlus size={15} />}
-              radius="xl"
-              size="sm"
-              onClick={() => notifications.show({ message: "Fonctionnalité bientôt disponible", color: "blue" })}
-            >
-              Programmer un visuel
-            </Button>
-            <ActionIcon
-              hiddenFrom="sm"
-              radius="xl"
-              size="md"
-              onClick={() => notifications.show({ message: "Fonctionnalité bientôt disponible", color: "blue" })}
-            >
-              <IconPlus size={16} />
-            </ActionIcon>
-          </>
-        )}
+        <Button
+          visibleFrom="sm"
+          leftSection={<IconPlus size={15} />}
+          radius="xl"
+          size="sm"
+          onClick={() => { setTab("rules"); setCreateOpen(true); }}
+        >
+          Nouvelle publication
+        </Button>
+        <ActionIcon
+          hiddenFrom="sm"
+          radius="xl"
+          size="md"
+          onClick={() => { setTab("rules"); setCreateOpen(true); }}
+        >
+          <IconPlus size={16} />
+        </ActionIcon>
       </Group>
 
       <Stack gap="md" mb="lg">
@@ -72,7 +68,7 @@ export default function SchedulingPage() {
         )}
       </Tabs.Panel>
       <Tabs.Panel value="rules">
-        {mounted ? <SchedulerRulesView selectedTeams={selectedTeams} /> : (
+        {mounted ? <SchedulerRulesView selectedTeams={selectedTeams} createOpen={createOpen} onCreateClose={() => setCreateOpen(false)} /> : (
           <Stack gap="sm">
             {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} height={80} radius="xl" />)}
           </Stack>

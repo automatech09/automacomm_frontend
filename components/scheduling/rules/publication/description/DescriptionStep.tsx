@@ -4,13 +4,13 @@ import { useRef, useState } from "react";
 import { Button, Divider, Group, Stack, Text } from "@mantine/core";
 import { IconSparkles } from "@tabler/icons-react";
 import { DESCRIPTION_MOCKS } from "@/lib/mockupdata/descriptions/data";
-import type { VisualType as TemplateVisualType } from "@/types/template";
+import type { VisualType} from "@/types/template";
 import type { Team } from "@/types/team";
 import { DescriptionBlock } from "./DescriptionBlock";
 import { VariablePicker } from "./VariablePicker";
 import { DescriptionPreview } from "./DescriptionPreview";
 
-const VISUAL_TYPE_MAP: Record<TemplateVisualType, string> = {
+const VISUAL_TYPE_MAP: Record<VisualType, string> = {
   "Résultat": "result",
   "Score en direct": "result",
   "Affiche": "match",
@@ -20,7 +20,7 @@ const VISUAL_TYPE_MAP: Record<TemplateVisualType, string> = {
 type FocusedField = "header" | "core" | "footer";
 
 interface Props {
-  visualType: TemplateVisualType | null;
+  visualType: VisualType | null;
   teams: Team[];
   header: string;
   core: string;
@@ -30,6 +30,10 @@ interface Props {
 
 export function DescriptionStep({ visualType, teams, header, core, footer, onChange }: Props) {
   const [focused, setFocused] = useState<FocusedField>("core");
+
+  const isCarousel = teams.length > 1;
+
+  const hintBlockCore = isCarousel ? "Répété pour chaque équipe — utilisez les variables ci-dessous" : "Utilisez les varibles ci-dessous"
 
   const headerRef = useRef<HTMLTextAreaElement>(null);
   const coreRef = useRef<HTMLTextAreaElement>(null);
@@ -41,6 +45,7 @@ export function DescriptionStep({ visualType, teams, header, core, footer, onCha
     footer: footerRef,
   };
 
+  
   const mockKey = visualType ? VISUAL_TYPE_MAP[visualType] : null;
   const mock = DESCRIPTION_MOCKS.find((m) => m.visualType === mockKey);
 
@@ -73,9 +78,11 @@ export function DescriptionStep({ visualType, teams, header, core, footer, onCha
       <Group justify="space-between" align="center">
         <Stack gap={2}>
           <Text fz="sm" fw={600} c="dark.6">Description de la publication</Text>
+          {isCarousel && (
           <Text fz="xs" c="dimmed">
             Le corps sera répété automatiquement pour chaque équipe concernée.
           </Text>
+          )}
         </Stack>
         {mock && (
           <Button
@@ -90,7 +97,6 @@ export function DescriptionStep({ visualType, teams, header, core, footer, onCha
           </Button>
         )}
       </Group>
-
       <Group align="flex-start" gap="lg" wrap="nowrap">
         <Stack gap="sm" style={{ flex: 1 }}>
           <DescriptionBlock
@@ -105,7 +111,7 @@ export function DescriptionStep({ visualType, teams, header, core, footer, onCha
           <DescriptionBlock
             ref={coreRef}
             label="Corps du message"
-            hint="Répété pour chaque équipe — utilisez les variables ci-dessous"
+            hint={hintBlockCore}
             value={core}
             onChange={(v) => onChange("core", v)}
             onFocus={() => setFocused("core")}

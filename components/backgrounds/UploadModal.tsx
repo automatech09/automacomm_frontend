@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Box, Button, Group, Modal, NativeSelect, Stack, Text } from "@mantine/core";
 import { IconUpload } from "@tabler/icons-react";
+import { initialTeams } from "@/lib/mockupdata/teams/data";
 
 type Props = { opened: boolean; onClose: () => void };
 
@@ -41,7 +42,7 @@ export function UploadModal({ opened, onClose }: Props) {
 
         <Stack gap="xs">
           <Text fz="sm" fw={600} c="brand.7">Attribuer à un visuel</Text>
-          <NativeSelect label="Équipe concernée" data={["Équipe 1", "Réserve", "U18", "Toutes"]} />
+          <NativeSelect label="Équipe concernée" data={["Toutes", ...initialTeams.map((t) => t.name)]} />
           <NativeSelect label="Template visuel" data={["Résultat victoire", "Résultat défaite", "Affiche match", "Classement semaine", "Calendrier mensuel"]} />
         </Stack>
 

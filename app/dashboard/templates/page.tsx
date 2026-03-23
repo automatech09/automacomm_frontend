@@ -6,19 +6,30 @@ import { notifications } from "@mantine/notifications";
 import { IconPlus } from "@tabler/icons-react";
 import { CreateTemplateModal } from "@/components/templates/CreateTemplateModal";
 import { TemplateDetailsModal } from "@/components/templates/TemplateDetailsModal";
-import type { CreateTemplatePayload, Template, TemplateTeamFilter } from "@/types";
+import type { Template } from "@/types";
+import type { CreateTemplatePayload } from "@/types/template";
 import { initialTemplates } from "@/lib/mockupdata/templates/data";
-import { teamUIColors, templateTeamTabs } from "@/lib/constants/templates";
+import { initialTeams } from "@/lib/mockupdata/teams/data";
 import { TemplateGrid } from "@/components/common/TemplateGrid";
 
-const teamColors = teamUIColors;
+const TEAM_TABS = [
+  { label: "Tous", color: "#04346D" },
+  ...initialTeams.map((t) => ({ label: t.name, color: t.color })),
+];
 
 export default function TemplatesPage() {
-  const [activeTeam, setActiveTeam] = useState<TemplateTeamFilter>("Tous");
+  const [activeTeam, setActiveTeam] = useState("Tous");
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
   const [duplicating, setDuplicating] = useState(false);
   const [deleting, setDeleting] = useState(false);
+
+  const handleCreateTemplate = async (payload: CreateTemplatePayload): Promise<boolean> => {
+    console.log("[templates] POST /api/templates", payload);
+    notifications.show({ color: "green", message: "Template créé" });
+    setCreateOpen(false);
+    return true;
+  };
 
   // TODO: remplacer par un vrai fetch GET /api/templates
   useEffect(() => {
@@ -30,21 +41,6 @@ export default function TemplatesPage() {
     [activeTeam]
   );
 
-  // TODO: POST /api/templates — body: { visualType, team, startFromScratch }
-  const handleCreateTemplate = async (payload: CreateTemplatePayload) => {
-    console.log("[templates] POST /api/templates", payload);
-
-    try {
-      // const res = await fetch("/api/templates", { method: "POST", body: JSON.stringify(payload) });
-      // const data = await res.json();
-      notifications.show({ color: "green", message: "Template créé avec succès" });
-      return true;
-    } catch (err) {
-      console.error("[templates] erreur création", err);
-      notifications.show({ color: "red", message: "Erreur lors de la création du template" });
-      return false;
-    }
-  };
 
   // TODO: POST /api/templates/:id/duplicate
   const handleDuplicate = async (template: Template) => {
@@ -94,12 +90,12 @@ export default function TemplatesPage() {
       </Group>
 
       <Group gap="sm" style={{ borderBottom: "1px solid rgba(4,52,109,0.1)" }}>
-        {templateTeamTabs.map((team) => {
-          const isActive = team === activeTeam;
+        {TEAM_TABS.map(({ label, color }) => {
+          const isActive = label === activeTeam;
           return (
-            <UnstyledButton key={team} onClick={() => setActiveTeam(team)} px="md" py="sm" style={{ position: "relative", color: isActive ? teamColors[team].text : "rgba(4,52,109,0.5)", fontWeight: isActive ? 600 : 500 }}>
-              <Text fz="sm">{team}</Text>
-              {isActive ? <Box style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: 2, background: teamColors[team].text }} /> : null}
+            <UnstyledButton key={label} onClick={() => setActiveTeam(label)} px="md" py="sm" style={{ position: "relative", color: isActive ? color : "rgba(4,52,109,0.5)", fontWeight: isActive ? 600 : 500 }}>
+              <Text fz="sm">{label}</Text>
+              {isActive && <Box style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: 2, background: color }} />}
             </UnstyledButton>
           );
         })}

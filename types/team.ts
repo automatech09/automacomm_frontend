@@ -19,8 +19,6 @@ export interface TeamFormData {
   color: string;
 }
 
-export type TeamName = "Équipe 1" | "Réserve" | "U18";
-
 export interface Player {
   id: string;
   teamId: string;

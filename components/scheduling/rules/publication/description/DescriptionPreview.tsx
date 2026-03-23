@@ -1,8 +1,9 @@
 import { Paper, Stack, Text } from "@mantine/core";
 import type { DescriptionMock } from "@/lib/mockupdata/descriptions/data";
 import type { Team } from "@/types/team";
+import { initialTeams } from "@/lib/mockupdata/teams/data";
 
-const FALLBACK_TEAM_NAMES = ["U15 A", "U17 B", "Seniors"];
+const FALLBACK_TEAM_NAMES = initialTeams.map((t) => t.name);
 
 const EXAMPLE_VALUES: Record<string, Record<string, string>> = {
   result: { "{opponent}": "FC Bordeaux", "{score}": "3-1", "{result_text}": "Victoire", "{result_emoji}": "🏆" },
@@ -25,10 +26,9 @@ interface Props {
 export function DescriptionPreview({ mock, teams, header, core, footer }: Props) {
   const teamNames = teams.length > 0 ? teams.map((t) => t.name) : FALLBACK_TEAM_NAMES;
   const extra = EXAMPLE_VALUES[mock.visualType] ?? {};
-
-  const coreText = core.trim() || mock.example.core;
-  const headerText = header.trim() || mock.example.header;
-  const footerText = footer.trim() || mock.example.footer;
+  const coreText = core.trim()
+  const headerText = header.trim()
+  const footerText = footer.trim()
 
   const lines: string[] = [];
   if (headerText) lines.push(headerText);

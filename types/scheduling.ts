@@ -1,5 +1,4 @@
-import type { Template } from "@/types/template";
-import type { NetworkType } from "./publication";
+import type { Template, VisualType } from "@/types/template";
 import type { Team } from "./team";
 
 export interface PublicationDescription {
@@ -17,17 +16,15 @@ export interface Publication {
   id: string;
   templates: Template[];
   teams: Team[];
-  platforms: NetworkType;
   schedule: PublicationSchedule;
   description?: PublicationDescription;
   active: boolean;
 }
 
-export interface ScheduledItem {
+export interface ScheduledPublication {
   id: string;
   date: Date;
   templates: Template[];
-  platforms: NetworkType;
   status: "upcoming" | "published" | "error";
   ruleId?: string;
 }

@@ -5,8 +5,10 @@ import { format, isToday, isTomorrow, isYesterday } from "date-fns";
 import { fr } from "date-fns/locale";
 import { ActionIcon, Badge, Box, Group, Image, Menu, Paper, SimpleGrid, Stack, Text } from "@mantine/core";
 import { IconDots } from "@tabler/icons-react";
-import { scheduledItems, type ScheduledItem } from "@/lib/mockupdata/scheduler/data";
+import { scheduledItems} from "@/lib/mockupdata/scheduler/data";
+import { ScheduledPublication } from "@/types";
 import { BadgeTeam } from "@/components/teams/BadgeTeam";
+import { getUniqueTeams } from "@/lib/utils/publications";
 import { COLORS } from "@/lib/constants/colors";
 import { STATUS_CONFIG } from "@/lib/constants/scheduler";
 
@@ -20,10 +22,10 @@ function getDayLabel(date: Date): string {
 }
 
 // ─── Card d'un événement ──────────────────────────────────
-function AgendaEventCard({ event }: { event: ScheduledItem }) {
+function AgendaEventCard({ event }: { event: ScheduledPublication }) {
   const { templates, status } = event;
   const statusConfig = STATUS_CONFIG[status];
-  const uniqueTeams = [...new Map(templates.map((t) => t.team).filter(Boolean).map((t) => [t!.id, t!])).values()];
+  const uniqueTeams = getUniqueTeams(event)
   return (
     <Paper bd="1px solid rgba(4,52,109,0.1)" bdrs={12} style={{ overflow: "hidden" }}>
       {/* Header */}
@@ -94,9 +96,9 @@ function AgendaEventCard({ event }: { event: ScheduledItem }) {
 }
 
 // ─── Vue agenda ───────────────────────────────────────────
-export function SchedulerAgendaView({ date, events = scheduledItems }: { date: Date; events?: ScheduledItem[] }) {
+export function SchedulerAgendaView({ date, events = scheduledItems }: { date: Date; events?: ScheduledPublication[] }) {
   const grouped = useMemo(() => {
-    const map = new Map<string, { date: Date; events: ScheduledItem[] }>();
+    const map = new Map<string, { date: Date; events: ScheduledPublication[] }>();
     const sorted = [...events].sort((a, b) => a.date.getTime() - b.date.getTime());
     for (const event of sorted) {
       const key = format(event.date, "yyyy-MM-dd");

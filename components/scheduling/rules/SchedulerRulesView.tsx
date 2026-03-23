@@ -1,25 +1,33 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Button, Group, Paper, Stack, Text } from "@mantine/core";
-import { IconPlus } from "@tabler/icons-react";
+import { useEffect, useMemo, useState } from "react";
+import { Paper, Stack, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
 import { initialPublications } from "@/lib/mockupdata/scheduler/rules";
 import { initialTeams } from "@/lib/mockupdata/teams/data";
 import type { Publication } from "@/types/scheduling";
-import { PublicationCard } from "./PublicationCard";
-import { PublicationDrawer } from "./PublicationDrawer";
+import { PublicationCard } from "./publication/PublicationCard";
+import { PublicationDrawer } from "./publication/PublicationDrawer";
 
 interface Props {
   selectedTeams: Set<string>;
+  createOpen?: boolean;
+  onCreateClose?: () => void;
 }
 
-export function SchedulerRulesView({ selectedTeams }: Props) {
+export function SchedulerRulesView({ selectedTeams, createOpen, onCreateClose }: Props) {
   const router = useRouter();
   const [publications, setPublications] = useState<Publication[]>(initialPublications);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selected, setSelected] = useState<Publication | null>(null);
+
+  useEffect(() => {
+    if (createOpen) {
+      setSelected(null);
+      setDrawerOpen(true);
+    }
+  }, [createOpen]);
 
   const allSelected = selectedTeams.size === 0 || selectedTeams.size === initialTeams.length;
   const filtered = useMemo(
@@ -35,17 +43,13 @@ export function SchedulerRulesView({ selectedTeams }: Props) {
   }
 
   function savePublication(updated: Publication) {
+    console.log(updated)
     setPublications((prev) =>
       prev.some((p) => p.id === updated.id)
         ? prev.map((p) => (p.id === updated.id ? updated : p))
         : [...prev, updated]
     );
     notifications.show({ message: "Publication sauvegardée", color: "green" });
-  }
-
-  function openCreate() {
-    setSelected(null);
-    setDrawerOpen(true);
   }
 
   function openEdit(p: Publication) {
@@ -55,17 +59,6 @@ export function SchedulerRulesView({ selectedTeams }: Props) {
 
   return (
     <Stack gap="lg">
-      <Group justify="flex-end">
-        <Button
-          leftSection={<IconPlus size={15} />}
-          radius="xl"
-          size="sm"
-          onClick={openCreate}
-        >
-          Nouvelle publication
-        </Button>
-      </Group>
-
       {filtered.length === 0 ? (
         <Paper radius="xl" p="xl" withBorder style={{ borderStyle: "dashed" }}>
           <Stack align="center" gap="xs">
@@ -90,7 +83,7 @@ export function SchedulerRulesView({ selectedTeams }: Props) {
       <PublicationDrawer
         open={drawerOpen}
         publication={selected}
-        onClose={() => setDrawerOpen(false)}
+        onClose={() => { setDrawerOpen(false); onCreateClose?.(); }}
         onSave={savePublication}
       />
     </Stack>

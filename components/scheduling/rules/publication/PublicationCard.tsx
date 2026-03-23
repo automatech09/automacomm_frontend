@@ -1,12 +1,10 @@
 "use client";
 
 import { Badge, Box, Group, Paper, Stack, Switch, Text } from "@mantine/core";
-import { IconBrandFacebook, IconBrandInstagram } from "@tabler/icons-react";
 import type { Publication } from "@/types/scheduling";
-import type { NetworkType } from "@/types/publication";
 import type { Template } from "@/types/template";
 import { MOMENT_PHRASES } from "@/lib/constants/scheduler";
-import { TeamPill } from "./TeamPill";
+import { TeamPill } from "../TeamPill";
 import { PublicationActionsMenu } from "./PublicationActionsMenu";
 
 function TemplateThumbnails({ templates }: { templates: Template[] }) {
@@ -52,18 +50,6 @@ function TemplateThumbnails({ templates }: { templates: Template[] }) {
   );
 }
 
-function PlatformIcons({ platforms }: { platforms: NetworkType }) {
-  return (
-    <Group gap={4}>
-      {(platforms === "instagram" || platforms === "both") && (
-        <IconBrandInstagram size={16} color="#E1306C" />
-      )}
-      {(platforms === "facebook" || platforms === "both") && (
-        <IconBrandFacebook size={16} color="#1877F2" />
-      )}
-    </Group>
-  );
-}
 
 interface Props {
   publication: Publication;
@@ -104,7 +90,6 @@ export function PublicationCard({ publication, onToggle, onEdit, onEditTemplate 
             </Text>
 
             <Group gap={6} align="center">
-              <PlatformIcons platforms={publication.platforms} />
               {isCarousel && (
                 <Badge size="xs" variant="light" color="grape">
                   Carrousel · {publication.templates.length} visuels

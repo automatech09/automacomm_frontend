@@ -1,4 +1,4 @@
-export type VisualType = "result" | "match" | "ranking";
+import { VisualType } from "@/types";
 
 export interface DescriptionMock {
   visualType: VisualType;
@@ -15,7 +15,7 @@ export interface DescriptionMock {
 
 export const DESCRIPTION_MOCKS: DescriptionMock[] = [
   {
-    visualType: "result",
+    visualType: "Résultat",
     label: "Résultat",
     availableVariables: [
       "{team}",
@@ -31,8 +31,8 @@ export const DESCRIPTION_MOCKS: DescriptionMock[] = [
     }
   },
   {
-    visualType: "match",
-    label: "Affiche / Match",
+    visualType: "Affiche",
+    label: "Affiche",
     availableVariables: [
       "{team}",
       "{opponent}",
@@ -47,7 +47,7 @@ export const DESCRIPTION_MOCKS: DescriptionMock[] = [
     }
   },
   {
-    visualType: "ranking",
+    visualType: "Classement",
     label: "Classement",
     availableVariables: [
       "{team}",

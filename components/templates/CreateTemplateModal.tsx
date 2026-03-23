@@ -17,10 +17,12 @@ import {
   UnstyledButton,
 } from "@mantine/core";
 import { IconChevronLeft, IconCopy, IconSparkles, IconX } from "@tabler/icons-react";
-import { templateCreationTeams, teamUIColors } from "@/lib/constants/templates";
+import { teamPalette } from "@/lib/constants/templates";
+import { initialTeams } from "@/lib/mockupdata/teams/data";
 import { SelectionCard } from "@/components/common/SelectionCard";
 import { VisualTypeSelector } from "@/components/common/VisualTypeSelector";
-import type { CreateTemplatePayload, TeamName, Template, TemplateCreationStep, VisualType } from "@/types";
+import type { CreateTemplatePayload, Template, TemplateCreationStep, VisualType } from "@/types";
+import type { Team } from "@/types/team";
 
 type CreateTemplateModalProps = {
   opened: boolean;
@@ -38,7 +40,7 @@ export function CreateTemplateModal({
 }: CreateTemplateModalProps) {
   const [step, setStep] = useState<TemplateCreationStep>(1);
   const [selectedType, setSelectedType] = useState<VisualType | null>(null);
-  const [selectedTeam, setSelectedTeam] = useState<TeamName | null>(null);
+  const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
   const [startFromScratch, setStartFromScratch] = useState<boolean | null>(null);
   const [creating, setCreating] = useState(false);
 
@@ -50,7 +52,7 @@ export function CreateTemplateModal({
   const resetState = () => {
     setStep(1);
     setSelectedType(null);
-    setSelectedTeam(null);
+    setSelectedTeam(null as Team | null);
     setStartFromScratch(null);
     setCreating(false);
   };
@@ -68,7 +70,7 @@ export function CreateTemplateModal({
     setCreating(true);
     const success = await onCreateTemplate({
       visualType: selectedType,
-      team: selectedTeam,
+      team: selectedTeam.name,
       startFromScratch,
     });
     setCreating(false);
@@ -109,14 +111,18 @@ export function CreateTemplateModal({
 
         {step === 2 ? (
           <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="sm">
-            {templateCreationTeams.map((team) => (
-              <UnstyledButton key={team} onClick={() => setSelectedTeam(team)}>
-                <Paper p="md" radius="xl" style={{ textAlign: "center", border: `2px solid ${selectedTeam === team ? teamUIColors[team].text : "transparent"}`, background: selectedTeam === team ? teamUIColors[team].bg : "rgba(4,52,109,0.03)" }}>
-                  <Badge variant="light" style={{ color: teamUIColors[team].text, background: `${teamUIColors[team].text}20` }}>{team}</Badge>
-                  <Text mt="sm" c="brand.7" fw={600}>{team}</Text>
-                </Paper>
-              </UnstyledButton>
-            ))}
+            {initialTeams.map((team) => {
+              const palette = teamPalette(team.color);
+              const isSelected = selectedTeam?.id === team.id;
+              return (
+                <UnstyledButton key={team.id} onClick={() => setSelectedTeam(team)}>
+                  <Paper p="md" radius="xl" style={{ textAlign: "center", border: `2px solid ${isSelected ? palette.text : "transparent"}`, background: isSelected ? palette.bg : "rgba(4,52,109,0.03)" }}>
+                    <Badge variant="light" style={{ color: palette.text, background: palette.bg }}>{team.name}</Badge>
+                    <Text mt="sm" c="brand.7" fw={600}>{team.name}</Text>
+                  </Paper>
+                </UnstyledButton>
+              );
+            })}
           </SimpleGrid>
         ) : null}
 
@@ -152,7 +158,7 @@ export function CreateTemplateModal({
           </Button>
           <Button
             bg="#04346D"
-            disabled={(step === 1 && !selectedType) || (step === 2 && !selectedTeam) || (step === 3 && startFromScratch === null)}
+            disabled={(step === 1 && !selectedType) || (step === 2 && selectedTeam === null) || (step === 3 && startFromScratch === null)}
             onClick={() => {
               if (step < 3) {
                 setStep((prev) => (prev + 1) as TemplateCreationStep);

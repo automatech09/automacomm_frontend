@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { addDays, format, isSameDay, isSameMonth, isToday, startOfMonth, startOfWeek } from "date-fns";
 import { Box, Center, Group, Stack, Text } from "@mantine/core";
-import type { ScheduledItem } from "@/lib/mockupdata/scheduler/data";
+import type { ScheduledPublication } from "@/lib/mockupdata/scheduler/data";
 import { COLORS } from "@/lib/constants/colors";
 import { CalendarEventCard } from "./CalendarEventCard";
   
@@ -41,7 +41,7 @@ function getWeeks(date: Date): Date[][] {
 function DayCell({
   day, events, maxVisible, expanded, onExpand, month,
 }: {
-  day: Date; events: ScheduledItem[]; maxVisible: number;
+  day: Date; events: ScheduledPublication[]; maxVisible: number;
   expanded: boolean; onExpand: () => void; month: Date;
 }) {
   const visible = events.slice(0, maxVisible);
@@ -94,7 +94,7 @@ function DayCell({
 }
 
 // ─── Ligne d'une semaine ──────────────────────────────────
-function WeekRow({ days, events, month }: { days: Date[]; events: ScheduledItem[]; month: Date }) {
+function WeekRow({ days, events, month }: { days: Date[]; events: ScheduledPublication[]; month: Date }) {
   const [expanded, setExpanded] = useState(false);
 
   const eventsByDay = days.map((day) => events.filter((e) => isSameDay(e.date, day)));
@@ -135,7 +135,7 @@ function WeekRow({ days, events, month }: { days: Date[]; events: ScheduledItem[
 // ─── Vue mois ─────────────────────────────────────────────
 interface Props {
   date: Date;
-  events: ScheduledItem[];
+  events: ScheduledPublication[];
 }
 
 export function SchedulerMonthView({ date, events }: Props) {

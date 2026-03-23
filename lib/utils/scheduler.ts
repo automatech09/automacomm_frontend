@@ -1,14 +1,9 @@
 import { COLORS } from "@/lib/constants/colors";
-import { ScheduledItem } from "@/types";
+import { ScheduledPublication } from "@/types";
+import { getUniqueTeams } from "./publications";
 
-export function getUniqueTeams(item: ScheduledItem) {
-  const seen = new Set<string>();
-  return item.templates
-    .map((t) => t.team)
-    .filter((t): t is NonNullable<typeof t> => !!t && !seen.has(t.id) && !!seen.add(t.id));
-}
 
-export function getEventColor(item: ScheduledItem): string {
+export function getEventColor(item: ScheduledPublication): string {
   const teams = getUniqueTeams(item);
   return teams.length === 1 ? teams[0].color : COLORS.primary;
 }

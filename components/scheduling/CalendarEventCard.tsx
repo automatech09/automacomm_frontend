@@ -4,16 +4,17 @@ import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Badge, Box, Group, Image, Modal, Stack, Text, Tooltip } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { ScheduledItem } from "@/types";
+import { ScheduledPublication } from "@/types";
 import { BadgeStoryOrPost } from "@/components/common/BadgeStoryPost";
 import { BadgeTeam } from "../teams/BadgeTeam";
 import { Carousel } from "@/components/common/Carousel";
 import { VISUAL_CONFIG } from "@/lib/constants/scheduler";
-import { getUniqueTeams, getEventColor } from "@/lib/utils/scheduler";
+import { getEventColor } from "@/lib/utils/scheduler";
+import { getUniqueTeams } from "@/lib/utils/publications";
 
 export { VISUAL_CONFIG };
 
-function EventTooltipLabel({ event }: { event: ScheduledItem }) {
+function EventTooltipLabel({ event }: { event: ScheduledPublication }) {
   const teams = getUniqueTeams(event);
   return (
     <Stack gap={8} p={4}>
@@ -47,7 +48,7 @@ function EventTooltipLabel({ event }: { event: ScheduledItem }) {
   );
 }
 
-export function CalendarEventCard({ event, view = "semaine" }: { event: ScheduledItem; view?: "semaine" | "month" }) {
+export function CalendarEventCard({ event, view = "semaine" }: { event: ScheduledPublication; view?: "semaine" | "month" }) {
   const [opened, { open, close }] = useDisclosure(false);
   const { templates } = event;
   const color = getEventColor(event);

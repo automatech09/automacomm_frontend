@@ -1,12 +1,9 @@
-import type { Team, TeamName } from "@/types/team";
+import type { Team } from "@/types/team";
 
 export type VisualType = "Résultat" | "Classement" | "Affiche" | "Score en direct";
 
-/** Alias de VisualType pour usage sémantique dans les pages */
-export type TemplateType = VisualType;
-
 export type TemplateFormat = "Post" | "Story";
-export type TemplateTeamFilter = TeamName | "Tous";
+
 export type TemplateCreationStep = 1 | 2 | 3;
 
 export interface Template {
@@ -22,6 +19,6 @@ export interface Template {
 
 export interface CreateTemplatePayload {
   visualType: VisualType;
-  team: TeamName;
+  team: string;
   startFromScratch: boolean;
 }
