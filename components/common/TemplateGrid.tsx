@@ -5,6 +5,7 @@ import { IconPlus } from "@tabler/icons-react";
 import type { Template } from "@/types";
 import { BadgeTeam } from "@/components/teams/BadgeTeam";
 import { BadgeStoryOrPost } from "@/components/common/BadgeStoryPost";
+import { BadgeVisualType } from "./BadgeVisualType";
 
 interface Props {
   templates: Template[];
@@ -34,7 +35,7 @@ export function TemplateGrid({ templates, onSelect, selectedIds, onAdd }: Props)
               <Box style={{ position: "relative", aspectRatio: "1 / 1" }}>
                 <Image src={template.thumbnail} alt={template.name} h="100%" w="100%" fit="cover" />
                 <Box style={{ position: "absolute", top: 12, left: 12, right: 12 }}>
-                  <Badge radius="xl" color="brand">{template.visualType}</Badge>
+                  <BadgeVisualType visualTypeName={template.visualType} size="md"/>
                 </Box>
               </Box>
               <Stack justify="space-between" py="lg" px="md" gap="xs">

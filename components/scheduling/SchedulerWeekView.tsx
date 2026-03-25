@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { addDays, format, isSameDay, isToday, startOfWeek } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Box, Center, Group, Stack, Text } from "@mantine/core";
-import type { ScheduledPublication } from "@/lib/mockupdata/scheduler/data";
+import { ScheduledPublication } from "@/types";
 import { COLORS } from "@/lib/constants/colors";
 import { CalendarEventCard } from "./CalendarEventCard";
 
@@ -12,7 +12,7 @@ import { CalendarEventCard } from "./CalendarEventCard";
 const HOUR_START = 0;
 const HOUR_END = 24;
 const CARD_HEIGHT = 100;
-const CARD_GAP = 4;
+const CARD_GAP = 8;
 const SLOT_PADDING = 8;
 const MIN_SLOT_HEIGHT = 48;
 const TIME_COL = 52;
@@ -74,7 +74,7 @@ function DayColumn({ day, events, slotHeights }: { day: Date; events: ScheduledP
           <Box
             key={h}
             style={{
-              height: slotHeights[i],
+              height: slotHeights[i] + 5,
               flexShrink: 0,
               borderTop: `1px solid ${BORDER_LIGHT}`,
               padding: hourEvents.length > 0 ? SLOT_PADDING / 2 : 0,

@@ -11,6 +11,7 @@ import { BadgeTeam } from "@/components/teams/BadgeTeam";
 import { getUniqueTeams } from "@/lib/utils/publications";
 import { COLORS } from "@/lib/constants/colors";
 import { STATUS_CONFIG } from "@/lib/constants/scheduler";
+import { BadgeVisualType } from "../common/BadgeVisualType";
 
 const PRIMARY = COLORS.primary;
 
@@ -55,18 +56,11 @@ function AgendaEventCard({ event }: { event: ScheduledPublication }) {
                   mah={300}
                   radius={8}
                 />
-                <Badge
-                  size="xs"
-                  radius="xl"
-                  color="brand"
-                  style={{
+                <BadgeVisualType style={{
                     position: "absolute",
                     top: 8,
                     left: 8,
-                  }}
-                >
-                  {t.visualType}
-                </Badge>
+                  }} visualTypeName={t.visualType} size="xs"/>
               </Box>
               <Group gap={4} align="center">
                 <Box w={6} h={6} style={{ borderRadius: "50%", backgroundColor: t.team?.color ?? PRIMARY, flexShrink: 0 }} />

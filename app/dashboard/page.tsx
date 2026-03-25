@@ -13,6 +13,7 @@ import {
   Text,
   Title,
   Divider,
+  Image,
 } from "@mantine/core";
 import {
   IconBellFilled,
@@ -23,16 +24,36 @@ import {
 } from "@tabler/icons-react";
 import { BadgeTeam } from "@/components/teams/BadgeTeam";
 import { DashboardOnboarding } from "@/components/onboarding/DashboardOnboarding";
-import { Carousel } from "@/components/common/Carousel";
 import { getSchedulerSummary } from "@/lib/api/scheduler";
-import { getVisualType, getUniqueTeams } from "@/lib/utils/publications";
+import { getVisualType, getUniqueTeams, getDisplayImages } from "@/lib/utils/publications";
 import { formatDate, formatTime } from "@/lib/utils/format";
+import { ScheduledPublication } from "@/types";
 
-const visualTypeColor = { bg: "#04346D", text: "#F5F3EB" };
+
+function ThumbnailGrid({ publication }: { publication: ScheduledPublication }) {
+  const images = getDisplayImages(publication);
+  return (
+    <Group gap={6} wrap="nowrap" align="stretch">
+      {images.map((src, i) => (
+        <Image
+          key={i}
+          src={src}
+          alt=""
+          radius="md"
+          fit="cover"
+          h={180}
+          style={{ flex: 1, minWidth: 0 }}
+        />
+      ))}
+    </Group>
+  );
+}
+
+
 
 export default function DashboardPage() {
   const [isFirstTime, setIsFirstTime] = useState(false);
-  const { upcomingItems, lastPublished, thisWeekItems } = getSchedulerSummary();
+  const {upcomingItems, lastPublished, thisWeekItems } = getSchedulerSummary();
   const nextUpcoming = upcomingItems[0] ?? null;
 
 
@@ -82,7 +103,7 @@ export default function DashboardPage() {
             <Stack gap="xs">
               {Object.entries(weekByType).map(([type, count]) => (
                 <Group key={type} justify="space-between" px="sm" py={6} style={{ borderRadius: 10, background: "rgba(4,52,109,0.03)" }}>
-                  <Badge radius="xl" size="sm" style={{ background: visualTypeColor.bg, color: visualTypeColor.text }}>{type}</Badge>
+                  <Badge radius="xl" size="sm" bg={'brand'}>{type}</Badge>
                   <Text fz="xs" fw={700} c="brand.7">{count}</Text>
                 </Group>
               ))}
@@ -104,7 +125,7 @@ export default function DashboardPage() {
             {lastPublished ? (
               <>
                 <Group gap="xs" wrap="wrap">
-                  <Badge radius="xl" style={{ background: visualTypeColor.bg, color: visualTypeColor.text }}>
+                <Badge radius="xl" bg={'brand'}>
                     {getVisualType(lastPublished)}
                   </Badge>
                   {getUniqueTeams(lastPublished).map((t) => <BadgeTeam key={t.id} teamData={t} />)}
@@ -119,16 +140,7 @@ export default function DashboardPage() {
             )}
 
             <Divider />
-            {lastPublished && (
-              <Box style={{ borderRadius: 8, overflow: "hidden" }} h={200}>
-                <Carousel
-                  height={200}
-                  slides={lastPublished.templates.map((t) => (
-                    <img key={t.id} src={t.thumbnail} alt={t.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                  ))}
-                />
-              </Box>
-            )}
+            {lastPublished && <ThumbnailGrid publication={lastPublished} />}
           </Stack>
         </Paper>
 
@@ -146,7 +158,7 @@ export default function DashboardPage() {
             {nextUpcoming ? (
               <>
                 <Group gap="xs" wrap="wrap">
-                  <Badge radius="xl" style={{ background: visualTypeColor.bg, color: visualTypeColor.text }}>
+                  <Badge radius="xl" bg={'brand'}>
                     {getVisualType(nextUpcoming)}
                   </Badge>
                   {getUniqueTeams(nextUpcoming).map((t) => <BadgeTeam key={t.id} teamData={t} />)}
@@ -161,16 +173,7 @@ export default function DashboardPage() {
             )}
 
             <Divider />
-            {nextUpcoming && (
-              <Box style={{ borderRadius: 8, overflow: "hidden" }} h={200}>
-                <Carousel
-                  height={200}
-                  slides={nextUpcoming.templates.map((t) => (
-                    <img key={t.id} src={t.thumbnail} alt={t.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                  ))}
-                />
-              </Box>
-            )}
+            {nextUpcoming && <ThumbnailGrid publication={nextUpcoming} />}
           </Stack>
         </Paper>
       </SimpleGrid>
@@ -199,8 +202,8 @@ export default function DashboardPage() {
               </Box>
 
               <Box w={100}>
-                <Badge radius="xl" style={{ background: visualTypeColor.bg, color: visualTypeColor.text }}>
-                  {getVisualType(item)}
+              <Badge radius="xl" bg={'brand'}>
+                {getVisualType(item)}
                 </Badge>
               </Box>
 

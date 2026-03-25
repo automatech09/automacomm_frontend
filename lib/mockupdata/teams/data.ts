@@ -1,9 +1,9 @@
 import type { Team, PlayerRow } from "@/types";
 
 export const initialTeams: Team[] = [
-  { id: "team1", name: "Équipe 1", league: "Division Régionale 1 — Auvergne-Rhône-Alpes", color: "#FF6B35" },
-  { id: "reserve", name: "Équipe Réserve", league: "Division Honneur Régionale", color: "#0F9B58" },
-  { id: "u18", name: "U18", league: "Championnat U18 Régional", color: "#7A0FB0" },
+  { id: "team1", name: "Équipe 1", league: "Division Régionale 1 — Auvergne-Rhône-Alpes", color: "#2e7d32" },
+  { id: "reserve", name: "Équipe Réserve", league: "Division Honneur Régionale", color: "#000000" },
+  { id: "u18", name: "U18", league: "Championnat U18 Régional", color: "#ff0000" },
 ];
 
 export const initialPlayers: PlayerRow[] = [

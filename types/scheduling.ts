@@ -1,4 +1,4 @@
-import type { Template, VisualType } from "@/types/template";
+import type { Template } from "@/types/template";
 import type { Team } from "./team";
 
 export interface PublicationDescription {
@@ -25,6 +25,7 @@ export interface ScheduledPublication {
   id: string;
   date: Date;
   templates: Template[];
+  result?: string [] | null;
   status: "upcoming" | "published" | "error";
   ruleId?: string;
 }

@@ -2,20 +2,22 @@
 
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Badge, Box, Group, Image, Modal, Stack, Text, Tooltip } from "@mantine/core";
+import { Badge, Box, Group, Image, Stack, Text, Tooltip } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { ScheduledPublication } from "@/types";
 import { BadgeStoryOrPost } from "@/components/common/BadgeStoryPost";
 import { BadgeTeam } from "../teams/BadgeTeam";
-import { Carousel } from "@/components/common/Carousel";
+import { ScheduledPublicationModal } from "./ScheduledPublicationModal";
 import { VISUAL_CONFIG } from "@/lib/constants/scheduler";
 import { getEventColor } from "@/lib/utils/scheduler";
 import { getUniqueTeams } from "@/lib/utils/publications";
+import { BadgeVisualType } from "../common/BadgeVisualType";
 
 export { VISUAL_CONFIG };
 
 function EventTooltipLabel({ event }: { event: ScheduledPublication }) {
   const teams = getUniqueTeams(event);
+  const isCarousel = teams.length > 1
   return (
     <Stack gap={8} p={4}>
       {/* Date & heure */}
@@ -27,6 +29,14 @@ function EventTooltipLabel({ event }: { event: ScheduledPublication }) {
           {format(event.date, "HH:mm", { locale: fr })}
         </Text>
       </Group>
+      {isCarousel &&  
+      
+      <Badge radius="xl" variant="light" color={"brand"} size="xs">
+        Carousel
+      </Badge> 
+      
+      }
+     
 
       {/* Équipes */}
       <Group gap={4}>
@@ -37,9 +47,7 @@ function EventTooltipLabel({ event }: { event: ScheduledPublication }) {
       <Stack gap={6}>
         {event.templates.map((t) => (
           <Group key={t.id} gap={6} align="center">
-            <Badge radius="xl" variant="light" color={"brand"} size="xs">
-              {t.visualType}
-            </Badge>
+            <BadgeVisualType visualTypeName={t.visualType} size="xs"/>
             <Text fz={11} c="brand" fw={500} lh={1}>{t.name}</Text>
           </Group>
         ))}
@@ -63,7 +71,6 @@ export function CalendarEventCard({ event, view = "semaine" }: { event: Schedule
         bd={`1px solid ${color}`}
         justify="space-between"
         p={6}
-        h="100%"
         style={{ cursor: "pointer", overflow: "hidden" }}
         onClick={open}
       >
@@ -73,11 +80,7 @@ export function CalendarEventCard({ event, view = "semaine" }: { event: Schedule
         </Group>
         {/* Carousel thumbnails */}
         <Group gap={4} wrap="nowrap">
-          {templates.map((t, i) => (
-            <Box key={i} style={{flex: 1, justifyItems: 'center' }}>
-              <Image src={t.thumbnail}radius={6} alt={t.name} mah={70} maw={60} style={{objectFit: "cover" }} />
-            </Box>
-          ))}
+        <Image src={templates[0].thumbnail} radius={3} alt={templates[0].name} mah={70} maw={60} style={{objectFit: "cover" }}/>
         </Group>
       </Stack>
     ) : (
@@ -109,14 +112,7 @@ export function CalendarEventCard({ event, view = "semaine" }: { event: Schedule
       <Tooltip radius={8} openDelay={500} color="white" label={<EventTooltipLabel event={event}/>} styles={{ tooltip: { boxShadow: "0 4px 16px rgba(0,0,0,0.12)", border: "1px solid rgba(0,0,0,0.06)" } }}>
         {cardContent}
       </Tooltip>
-      <Modal opened={opened} onClose={close} title="">
-        {/* à remplir */}
-        <Carousel
-          slides={templates.map((t) => (
-            <Image src={t.thumbnail} alt={t.name} style={{objectFit: "cover" }} />
-          ))}
-        />
-      </Modal>
+      <ScheduledPublicationModal event={event} opened={opened} onClose={close} />
     </>
   );
 }
