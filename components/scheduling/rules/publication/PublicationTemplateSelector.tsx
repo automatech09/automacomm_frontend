@@ -1,6 +1,7 @@
 "use client";
 
-import { Badge, Box, Group, Image, Paper, SimpleGrid, Stack, Text, UnstyledButton } from "@mantine/core";
+import { Badge, Box, Group, Paper, SimpleGrid, Stack, Text, UnstyledButton } from "@mantine/core";
+import { DisplayImage } from "@/components/common/DisplayImage";
 import type { Template } from "@/types/template";
 import { BadgeTeam } from "@/components/teams/BadgeTeam";
 import { BadgeStoryOrPost } from "@/components/common/BadgeStoryPost";
@@ -56,7 +57,7 @@ export function PublicationTemplateSelector({ templates, selectedIds, onChange, 
               }}
             >
               <Box style={{ position: "relative", aspectRatio: "1 / 1" }}>
-                <Image src={t.thumbnail} alt={t.name} h="100%" w="100%" fit="cover" />
+                <DisplayImage src={t.thumbnail} alt={t.name} h="100%" w="100%" fit="cover" style={{ display: "block" }} />
                 <Box style={{ position: "absolute", top: 12, left: 12, right: 12 }}>
                   <Badge radius="xl" color="brand">{t.visualType}</Badge>
                 </Box>

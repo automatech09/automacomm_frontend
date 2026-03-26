@@ -3,7 +3,8 @@
 import { useEffect, useMemo } from "react";
 import { format, isToday, isTomorrow, isYesterday } from "date-fns";
 import { fr } from "date-fns/locale";
-import { ActionIcon, Badge, Box, Group, Image, Menu, Paper, SimpleGrid, Stack, Text } from "@mantine/core";
+import { ActionIcon, Badge, Box, Group, Menu, Paper, SimpleGrid, Stack, Text } from "@mantine/core";
+import { DisplayImage } from "@/components/common/DisplayImage";
 import { IconDots } from "@tabler/icons-react";
 import { scheduledItems} from "@/lib/mockupdata/scheduler/data";
 import { ScheduledPublication } from "@/types";
@@ -11,7 +12,7 @@ import { BadgeTeam } from "@/components/teams/BadgeTeam";
 import { getUniqueTeams } from "@/lib/utils/publications";
 import { COLORS } from "@/lib/constants/colors";
 import { STATUS_CONFIG } from "@/lib/constants/scheduler";
-import { BadgeVisualType } from "../common/BadgeVisualType";
+import { BadgeVisualType } from "@/components/common/BadgeVisualType";
 
 const PRIMARY = COLORS.primary;
 
@@ -49,7 +50,7 @@ function AgendaEventCard({ event }: { event: ScheduledPublication }) {
           {templates.map((t, i) => (
             <Stack key={i} gap={4} align={templates.length === 1 ? "center" : "stretch"}>
               <Box style={{ position: "relative", display: "inline-block" }}>
-                <Image
+                <DisplayImage
                   src={t.thumbnail}
                   alt={t.name}
                   w={templates.length === 1 ? "auto" : "100%"}

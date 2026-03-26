@@ -28,7 +28,7 @@ export const scheduledItems: ScheduledPublication[] = [
   // ─── À venir (23 mars → 7 avril) ─────────────────────
   { id: "u1", date: dt(2026, 3, 23, 18, 0), templates: [T_AFFICHE_EQ1],      status: "upcoming", ruleId: "2" },
   { id: "u2", date: dt(2026, 3, 24, 9, 0),  templates: [T_CLASSEMENT_EQ1],   status: "upcoming", ruleId: "3" },
-  { id: "u3", date: dt(2026, 3, 25, 18, 0), templates: [T_AFFICHE_EQ1],      status: "upcoming", ruleId: "2" },
+  { id: "u3", date: dt(2026, 3, 25, 18, 0), templates: [T_AFFICHE_EQ1, T_RESULTAT_RESERVE, T_RESULTAT_EQ1],      status: "upcoming", ruleId: "2" },
   { id: "u4", date: dt(2026, 3, 26, 9, 0),  templates: [T_RESULTAT_U18],     status: "upcoming", ruleId: "5" },
   { id: "u5", date: dt(2026, 3, 26, 9, 0),  templates: [T_RESULTAT_RESERVE], status: "upcoming", ruleId: "4" },
   { id: "u6", date: dt(2026, 3, 26, 9, 0), templates: [T_RESULTAT_EQ1],     status: "upcoming", ruleId: "1" },

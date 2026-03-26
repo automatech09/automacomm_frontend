@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { ActionIcon, Box, Button, FileButton, Group, Loader, Image,  Modal, Paper, Popover, Stack, Text, TextInput, Title, Tooltip, UnstyledButton } from "@mantine/core";
+import { ActionIcon, Box, Button, FileButton, Group, Loader, Modal, Paper, Popover, Stack, Text, TextInput, Title, Tooltip, UnstyledButton } from "@mantine/core";
+import { DisplayImage } from "@/components/common/DisplayImage";
 import { IconArrowLeft, IconCheck, IconRefresh, IconUpload, IconX } from "@tabler/icons-react";
 import Link from "next/link";
 import { opponentTeams, resetTeamOverrides, saveTeamOverrides } from "@/lib/mockupdata/opponent-teams/data";
@@ -16,7 +17,7 @@ function TeamLogo({ logoUrl, size = 40, onClick }: { size?: number; logoUrl?: st
       w={size} h={size}
       style={{ borderRadius: size * 0.25, overflow: "hidden", flexShrink: 0, cursor: onClick ? "pointer" : "default", background: "rgba(4,52,109,0.06)" }}
     >
-      <Image src={logoUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }} />
+      <DisplayImage src={logoUrl ?? ""} alt="" style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }} />
     </Box>
   );
 }
@@ -193,7 +194,7 @@ export default function OpponentTeamsPage() {
                       background: "rgba(4,52,109,0.02)", cursor: "pointer",
                     }}
                   >
-                        <Image src={logoModal.draft} alt="" style={{ width: 88, height: 88, objectFit: "contain", borderRadius: 14 }} />
+                        <DisplayImage src={logoModal.draft} alt="" style={{ width: 88, height: 88, objectFit: "contain", borderRadius: 14, display: "block" }} />
                         <Text fz="xs" c="rgba(4,52,109,0.4)">Cliquez pour changer l&apos;image</Text>
                   </Box>
                 </UnstyledButton>

@@ -27,17 +27,26 @@ export function Carousel({
   const prev = () => setIndex((i) => (i - 1 + slides.length) % slides.length);
   const next = () => setIndex((i) => (i + 1) % slides.length);
 
+  const arrowStyle = {
+    position: "absolute" as const,
+    top: "50%",
+    transform: "translateY(-50%)",
+    background: "rgba(0,0,0,0.35)",
+    backdropFilter: "blur(6px)",
+    border: "1px solid rgba(255,255,255,0.15)",
+    color: "white",
+  };
+
   return (
-    <Box style={{ height, width, position: "relative", overflow: "hidden" }}>
+    <Box style={{ height, width, position: "relative", overflow: "hidden"}}>
       {/* Slides */}
-      <Box
-        style={{
-          display: "flex",
-          height: "100%",
-          transform: `translateX(-${index * 100}%)`,
-          transition: "transform 220ms ease",
-        }}
-      >
+      <Box 
+      style={{
+        display: "flex",
+        height: "100%",
+        transform: `translateX(-${index * 100}%)`,
+        transition: "transform 240ms ease",
+      }}>
         {slides.map((slide, i) => (
           <Box key={i} style={{ flexShrink: 0, width: "100%", height: "100%" }}>
             {slide}
@@ -48,42 +57,31 @@ export function Carousel({
       {/* Arrows */}
       {showArrows && (
         <>
-          <ActionIcon
-            variant="white"
-            size="sm"
-            radius="xl"
-            style={{ position: "absolute", left: 4, top: "50%", transform: "translateY(-50%)", opacity: 0.85 }}
-            onClick={prev}
-          >
-            <IconChevronLeft size={12} />
+          <ActionIcon size="lg" radius="xl" style={{ ...arrowStyle, left: 12 }} onClick={prev}>
+            <IconChevronLeft size={16} />
           </ActionIcon>
-          <ActionIcon
-            variant="white"
-            size="sm"
-            radius="xl"
-            style={{ position: "absolute", right: 4, top: "50%", transform: "translateY(-50%)", opacity: 0.85 }}
-            onClick={next}
-          >
-            <IconChevronRight size={12} />
+          <ActionIcon size="lg" radius="xl" style={{ ...arrowStyle, right: 12 }} onClick={next}>
+            <IconChevronRight size={16} />
           </ActionIcon>
         </>
       )}
 
       {/* Dots */}
       {showDots && (
-        <Group gap={4} justify="center" style={{ position: "absolute", bottom: 4, left: 0, right: 0 }}>
+        <Group gap={5} justify="center" style={{ position: "absolute", bottom: 14, left: 0, right: 0 }}>
           {slides.map((_, i) => (
             <Box
               key={i}
               onClick={() => setIndex(i)}
               style={{
-                width: i === index ? 12 : 5,
-                height: 5,
+                width: i === index ? 16 : 6,
+                height: 6,
                 borderRadius: 999,
-                backgroundColor: "white",
-                opacity: i === index ? 1 : 0.5,
+                background: "white",
+                opacity: i === index ? 1 : 0.45,
                 cursor: "pointer",
-                transition: "all 180ms ease",
+                transition: "all 200ms ease",
+                boxShadow: "0 1px 4px rgba(0,0,0,0.4)",
               }}
             />
           ))}

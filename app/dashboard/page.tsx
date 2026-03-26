@@ -5,6 +5,7 @@ import {
   ActionIcon,
   Badge,
   Box,
+  Image,
   Button,
   Group,
   Paper,
@@ -13,7 +14,6 @@ import {
   Text,
   Title,
   Divider,
-  Image,
 } from "@mantine/core";
 import {
   IconBellFilled,
@@ -26,6 +26,7 @@ import { BadgeTeam } from "@/components/teams/BadgeTeam";
 import { DashboardOnboarding } from "@/components/onboarding/DashboardOnboarding";
 import { getSchedulerSummary } from "@/lib/api/scheduler";
 import { getVisualType, getUniqueTeams, getDisplayImages } from "@/lib/utils/publications";
+import { DisplayImage } from "@/components/common/DisplayImage";
 import { formatDate, formatTime } from "@/lib/utils/format";
 import { ScheduledPublication } from "@/types";
 
@@ -33,17 +34,17 @@ import { ScheduledPublication } from "@/types";
 function ThumbnailGrid({ publication }: { publication: ScheduledPublication }) {
   const images = getDisplayImages(publication);
   return (
-    <Group gap={6} wrap="nowrap" align="stretch">
+    <Group
+    wrap="nowrap"
+    align="center"
+    justify="center"
+    gap={4}
+    h={200}
+    >
       {images.map((src, i) => (
-        <Image
-          key={i}
-          src={src}
-          alt=""
-          radius="md"
-          fit="cover"
-          h={180}
-          style={{ flex: 1, minWidth: 0 }}
-        />
+        <Box style={{position: 'relative'}}>
+        <DisplayImage key={i} src={src} mah={200} radius={10}/>
+        </Box>
       ))}
     </Group>
   );
@@ -56,8 +57,6 @@ export default function DashboardPage() {
   const {upcomingItems, lastPublished, thisWeekItems } = getSchedulerSummary();
   const nextUpcoming = upcomingItems[0] ?? null;
 
-
-  const IS_FIRST_TIME = false
 
   // Comptage par type de visuel pour la semaine
   const weekByType = thisWeekItems.reduce<Record<string, number>>((acc, item) => {

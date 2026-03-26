@@ -1,6 +1,7 @@
 "use client";
 
-import { Badge, Box, Group, Image, Paper, SimpleGrid, Stack, Text, UnstyledButton } from "@mantine/core";
+import { Badge, Box, Group, Paper, SimpleGrid, Stack, Text, UnstyledButton } from "@mantine/core";
+import { DisplayImage } from "@/components/common/DisplayImage";
 import { IconPlus } from "@tabler/icons-react";
 import type { Template } from "@/types";
 import { BadgeTeam } from "@/components/teams/BadgeTeam";
@@ -33,7 +34,7 @@ export function TemplateGrid({ templates, onSelect, selectedIds, onAdd }: Props)
               }}
             >
               <Box style={{ position: "relative", aspectRatio: "1 / 1" }}>
-                <Image src={template.thumbnail} alt={template.name} h="100%" w="100%" fit="cover" />
+                <DisplayImage src={template.thumbnail} alt={template.name} h="100%" w="100%" fit="cover" style={{ display: "block" }} />
                 <Box style={{ position: "absolute", top: 12, left: 12, right: 12 }}>
                   <BadgeVisualType visualTypeName={template.visualType} size="md"/>
                 </Box>
