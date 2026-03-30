@@ -8,7 +8,7 @@ interface Props {
 export function VariablePicker({ variables, onInsert }: Props) {
   return (
     <Stack gap={6}>
-      <Text fz="xs" fw={600} c="dimmed" tt="uppercase" ls={0.5}>
+      <Text fz="xs" fw={600} c="dimmed" tt="uppercase">
         Variables disponibles
       </Text>
       <Group gap={6}>

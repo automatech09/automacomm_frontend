@@ -4,18 +4,12 @@ import { useRef, useState } from "react";
 import { Button, Divider, Group, Stack, Text } from "@mantine/core";
 import { IconSparkles } from "@tabler/icons-react";
 import { DESCRIPTION_MOCKS } from "@/lib/mockupdata/descriptions/data";
-import type { VisualType} from "@/types/template";
+import type { VisualType } from "@/types/template";
 import type { Team } from "@/types/team";
 import { DescriptionBlock } from "./DescriptionBlock";
 import { VariablePicker } from "./VariablePicker";
 import { DescriptionPreview } from "./DescriptionPreview";
 
-const VISUAL_TYPE_MAP: Record<VisualType, string> = {
-  "Résultat": "result",
-  "Score en direct": "result",
-  "Affiche": "match",
-  "Classement": "ranking",
-};
 
 type FocusedField = "header" | "core" | "footer";
 
@@ -46,8 +40,7 @@ export function DescriptionStep({ visualType, teams, header, core, footer, onCha
   };
 
   
-  const mockKey = visualType ? VISUAL_TYPE_MAP[visualType] : null;
-  const mock = DESCRIPTION_MOCKS.find((m) => m.visualType === mockKey);
+  const mock = DESCRIPTION_MOCKS.find((m) => m.visualType === visualType);
 
   function insertVariable(variable: string) {
     const el = refs[focused].current;

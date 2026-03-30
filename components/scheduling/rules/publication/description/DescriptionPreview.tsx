@@ -1,14 +1,12 @@
 import { Paper, Stack, Text } from "@mantine/core";
 import type { DescriptionMock } from "@/lib/mockupdata/descriptions/data";
 import type { Team } from "@/types/team";
-import { initialTeams } from "@/lib/mockupdata/teams/data";
 
-const FALLBACK_TEAM_NAMES = initialTeams.map((t) => t.name);
 
 const EXAMPLE_VALUES: Record<string, Record<string, string>> = {
-  result: { "{opponent}": "FC Bordeaux", "{score}": "3-1", "{result_text}": "Victoire", "{result_emoji}": "🏆" },
-  match: { "{opponent}": "FC Bordeaux", "{date}": "Sam 15 mars", "{competition}": "Championnat U15", "{time}": "14h30" },
-  ranking: { "{position}": "2e", "{points}": "34", "{played}": "18", "{won}": "11", "{lost}": "4" },
+  Résultat: { "{opponent}": "FC Bordeaux", "{score}": "3-1", "{result_text}": "Victoire", "{result_emoji}": "🏆" },
+  Affiche: { "{opponent}": "FC Bordeaux", "{date}": "Sam 15 mars", "{competition}": "Championnat U15", "{time}": "14h30" },
+  Classement: { "{position}": "2e", "{points}": "34", "{played}": "18", "{won}": "11", "{lost}": "4" },
 };
 
 function fillVariables(template: string, values: Record<string, string>): string {
@@ -24,7 +22,7 @@ interface Props {
 }
 
 export function DescriptionPreview({ mock, teams, header, core, footer }: Props) {
-  const teamNames = teams.length > 0 ? teams.map((t) => t.name) : FALLBACK_TEAM_NAMES;
+  const teamNames = teams.length > 0 ? teams.map((t) => t.name) : [];
   const extra = EXAMPLE_VALUES[mock.visualType] ?? {};
   const coreText = core.trim()
   const headerText = header.trim()

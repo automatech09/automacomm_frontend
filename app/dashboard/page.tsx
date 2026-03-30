@@ -5,7 +5,6 @@ import {
   ActionIcon,
   Badge,
   Box,
-  Image,
   Button,
   Group,
   Paper,
@@ -29,6 +28,8 @@ import { getVisualType, getUniqueTeams, getDisplayImages } from "@/lib/utils/pub
 import { DisplayImage } from "@/components/common/DisplayImage";
 import { formatDate, formatTime } from "@/lib/utils/format";
 import { ScheduledPublication } from "@/types";
+import { type SchedulerSummary } from "@/lib/api/scheduler";
+import { getTeams } from "@/lib/api/team";
 
 
 function ThumbnailGrid({ publication }: { publication: ScheduledPublication }) {
@@ -54,7 +55,16 @@ function ThumbnailGrid({ publication }: { publication: ScheduledPublication }) {
 
 export default function DashboardPage() {
   const [isFirstTime, setIsFirstTime] = useState(false);
-  const {upcomingItems, lastPublished, thisWeekItems } = getSchedulerSummary();
+  const [summary, setSummary] = useState<SchedulerSummary | null>(null); 
+
+
+  useEffect(() => {
+    getSchedulerSummary().then(setSummary)
+      }, []);
+
+  const upcomingItems = summary?.upcomingItems ?? []
+  const lastPublished = summary?.lastPublished ?? null;     
+  const thisWeekItems = summary?.thisWeekItems ?? [];
   const nextUpcoming = upcomingItems[0] ?? null;
 
 

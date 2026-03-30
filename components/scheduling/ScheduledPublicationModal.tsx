@@ -12,7 +12,6 @@ import {
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { BadgeTeam } from "@/components/teams/BadgeTeam";
-import { BadgeStoryOrPost } from "@/components/common/BadgeStoryPost";
 import { getUniqueTeams, getDisplayImages } from "@/lib/utils/publications";
 import { STATUS_CONFIG } from "@/lib/constants/scheduler";
 import type { ScheduledPublication } from "@/types";
