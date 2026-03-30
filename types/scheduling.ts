@@ -7,6 +7,24 @@ export interface PublicationDescription {
   footer?: string;
 }
 
+export interface TeamTag {
+  label: string;
+  borderColor: string;
+}
+
+export interface ScheduleRule {
+  id: string;
+  visualType: string;
+  teams: TeamTag[];
+  format: "P" | "S";
+  moment: string;
+  time: string;
+  templates?: string[];
+  description?: string;
+  isCustomDescription?: boolean;
+  isCarousel?: boolean;
+}
+
 export interface PublicationSchedule {
   moment: string; // "veille_match", "jour_match", etc.
   time: string;   // "18:00"

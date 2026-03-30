@@ -1,3 +1,4 @@
+export * from "./admin-template";
 export * from "./background";
 export * from "./generation";
 export * from "./network";

@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { addDays, format, isSameDay, isSameMonth, isToday, startOfMonth, startOfWeek } from "date-fns";
 import { Box, Center, Group, Stack, Text } from "@mantine/core";
-import type { ScheduledPublication } from "@/lib/mockupdata/scheduler/data";
+import type { ScheduledPublication } from "@/types";
 import { COLORS } from "@/lib/constants/colors";
 import { CalendarEventCard } from "./CalendarEventCard";
   
