@@ -43,7 +43,7 @@ function ThumbnailGrid({ publication }: { publication: ScheduledPublication }) {
     h={200}
     >
       {images.map((src, i) => (
-        <Box style={{position: 'relative'}}>
+        <Box key={i} style={{position: 'relative'}}>
         <DisplayImage key={i} src={src} mah={200} radius={10}/>
         </Box>
       ))}

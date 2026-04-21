@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase/client";
 import {
   ActionIcon,
   Avatar,
@@ -188,7 +189,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   };
 
   const handleNavClick = () => setSidebarOpen(false);
-  const handleLogout = () => router.push("/login");
+
+  async function handleLogout() {
+    const { error } = await supabase.auth.signOut()
+    router.push('/login')
+  }
 
   return (
     <Box mih="100vh" bg="#F5F3EB">
