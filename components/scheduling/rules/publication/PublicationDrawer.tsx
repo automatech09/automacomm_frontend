@@ -12,9 +12,10 @@ import { VisualTypeSelector } from "@/components/common/VisualTypeSelector";
 import { DescriptionStep } from "./description/DescriptionStep";
 import { PlanificationStep } from "./PlanificationStep";
 import type { Publication, PublicationDescription } from "@/types/scheduling";
+import type { Template } from "@/types";
 import type { Team } from "@/types/team";
 import type { TemplateFormat, VisualType } from "@/types/template";
-import { initialTemplates } from "@/lib/mockupdata/templates/data";
+import { getTemplates } from "@/lib/api/templates";
 
 const STEPS = ["Type", "Visuels", "Description", "Planification"];
 
@@ -29,9 +30,9 @@ const EMPTY_FORM = {
   time: "18:00",
 };
 
-function teamsFromTemplateIds(ids: number[]): Team[] {
+function teamsFromTemplateIds(ids: number[], allTemplates: Template[]): Team[] {
   const seen = new Set<string>();
-  return initialTemplates
+  return allTemplates
     .filter((t) => ids.includes(t.id) && t.team !== null)
     .map((t) => t.team!)
     .filter((team) => !seen.has(team.id) && !!seen.add(team.id));
@@ -51,9 +52,9 @@ function fromPublication(p: Publication): typeof EMPTY_FORM {
   };
 }
 
-function toPublication(id: string, form: typeof EMPTY_FORM, active: boolean): Publication {
-  const templates = initialTemplates.filter((t) => form.templateIds.includes(t.id));
-  const teams = teamsFromTemplateIds(form.templateIds);
+function toPublication(id: string, form: typeof EMPTY_FORM, active: boolean, allTemplates: Template[]): Publication {
+  const templates = allTemplates.filter((t) => form.templateIds.includes(t.id));
+  const teams = teamsFromTemplateIds(form.templateIds, allTemplates);
   const description: PublicationDescription | undefined = form.core.trim()
     ? {
         ...(form.header.trim() && { header: form.header }),
@@ -72,8 +73,13 @@ interface Props {
 }
 
 export function PublicationDrawer({ open, publication, onClose, onSave }: Props) {
+  const [allTemplates, setAllTemplates] = useState<Template[]>([]);
   const [step, setStep] = useState(0);
   const [form, setForm] = useState(EMPTY_FORM);
+
+  useEffect(() => {
+    getTemplates().then(setAllTemplates);
+  }, []);
 
   useEffect(() => {
     if (open) {
@@ -91,11 +97,11 @@ export function PublicationDrawer({ open, publication, onClose, onSave }: Props)
   }
 
   const filteredTemplates = useMemo(
-    () => initialTemplates.filter((t) =>
+    () => allTemplates.filter((t) =>
       (!form.format || t.format === form.format) &&
       (!form.visualType || t.visualType === form.visualType)
     ),
-    [form.format, form.visualType]
+    [allTemplates, form.format, form.visualType]
   );
 
   const isStory = form.format === "Story";
@@ -108,7 +114,7 @@ export function PublicationDrawer({ open, publication, onClose, onSave }: Props)
     setStep((s) => (s === 3 && isStory ? 1 : s - 1));
   }
 
-  const confirmTeams = teamsFromTemplateIds(form.templateIds);
+  const confirmTeams = teamsFromTemplateIds(form.templateIds, allTemplates);
 
   function handleTemplateSelect(id: number) {
     setForm((f) => ({
@@ -123,7 +129,7 @@ export function PublicationDrawer({ open, publication, onClose, onSave }: Props)
 
   function handleSave() {
     const id = publication?.id ?? crypto.randomUUID();
-    const result = toPublication(id, form, publication?.active ?? true);
+    const result = toPublication(id, form, publication?.active ?? true, allTemplates);
     onSave(result);
     onClose();
   }
@@ -213,7 +219,7 @@ export function PublicationDrawer({ open, publication, onClose, onSave }: Props)
           {step === 2 && (
             <DescriptionStep
               visualType={form.visualType}
-              teams={teamsFromTemplateIds(form.templateIds)}
+              teams={teamsFromTemplateIds(form.templateIds, allTemplates)}
               header={form.header}
               core={form.core}
               footer={form.footer}
@@ -267,7 +273,7 @@ export function PublicationDrawer({ open, publication, onClose, onSave }: Props)
               <Popover.Dropdown p="lg">
                 <Stack gap="md">
                   <PublicationConfirmCard
-                    templateIds={form.templateIds}
+                    templates={allTemplates.filter((t) => form.templateIds.includes(t.id))}
                     teams={confirmTeams}
                     moment={form.moment}
                     time={form.time}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import {
@@ -29,10 +29,10 @@ import {
   IconSparkles,
 } from "@tabler/icons-react";
 import { BadgeTeam } from "@/components/teams/BadgeTeam";
-import { initialTemplates } from "@/lib/mockupdata/templates/data";
-import type { GenerationForm, NetworkType } from "@/types";
+import { getTemplates } from "@/lib/api/templates";
+import type { GenerationForm, NetworkType, Template } from "@/types";
 
-function previewUrl(template: (typeof initialTemplates)[number], form: GenerationForm) {
+function previewUrl(template: Template, form: GenerationForm) {
   const color = template.team?.color.slice(1) ?? "04346D";
   const text =
     template.visualType === "Résultat"
@@ -45,10 +45,13 @@ export default function TemplateGenerationPage() {
   const params = useParams();
   const id = Number(params.id);
 
-  const template = initialTemplates.find((t) => t.id === id);
+  const [template, setTemplate] = useState<Template | null>(null);
+  useEffect(() => {
+    getTemplates().then((list) => setTemplate(list.find((t) => t.id === id) ?? null));
+  }, [id]);
 
-  const [form, setForm] = useState<GenerationForm>(() => ({
-    teamId: template?.team?.id ?? "",
+  const [form, setForm] = useState<GenerationForm>({
+    teamId: "",
     opponent: "AS Millery",
     scoreHome: "3",
     scoreAway: "1",
@@ -57,8 +60,12 @@ export default function TemplateGenerationPage() {
     location: "Stade Léo Lagrange",
     competition: "Division Régionale 1",
     network: "both",
-  }));
-  
+  });
+
+  useEffect(() => {
+    if (template) setForm((f) => ({ ...f, teamId: template.team?.id ?? "" }));
+  }, [template]);
+
   const [generated, setGenerated] = useState(false);
   const [publishing, setPublishing] = useState(false);
   const [published, setPublished] = useState(false);

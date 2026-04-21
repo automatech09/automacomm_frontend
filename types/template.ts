@@ -15,6 +15,8 @@ export interface Template {
   urlArrierePlan: string | null;
   thumbnail: string;
   lastUsed?: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface CreateTemplatePayload {

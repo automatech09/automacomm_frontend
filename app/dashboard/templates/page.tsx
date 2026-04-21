@@ -8,7 +8,7 @@ import { CreateTemplateModal } from "@/components/templates/CreateTemplateModal"
 import { TemplateDetailsModal } from "@/components/templates/TemplateDetailsModal";
 import type { Template } from "@/types";
 import type { CreateTemplatePayload } from "@/types/template";
-import { initialTemplates } from "@/lib/mockupdata/templates/data";
+import { getTemplates } from "@/lib/api/templates";
 import { initialTeams } from "@/lib/mockupdata/teams/data";
 import { TemplateGrid } from "@/components/common/TemplateGrid";
 
@@ -18,11 +18,16 @@ const TEAM_TABS = [
 ];
 
 export default function TemplatesPage() {
+  const [templates, setTemplates] = useState<Template[]>([]);
   const [activeTeam, setActiveTeam] = useState("Tous");
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
   const [duplicating, setDuplicating] = useState(false);
   const [deleting, setDeleting] = useState(false);
+
+  useEffect(() => {
+    getTemplates().then(setTemplates);
+  }, []);
 
   const handleCreateTemplate = async (payload: CreateTemplatePayload): Promise<boolean> => {
     console.log("[templates] POST /api/templates", payload);
@@ -31,14 +36,9 @@ export default function TemplatesPage() {
     return true;
   };
 
-  // TODO: remplacer par un vrai fetch GET /api/templates
-  useEffect(() => {
-    console.log("[templates] fetch GET /api/templates");
-  }, []);
-
   const filteredTemplates = useMemo(
-    () => (activeTeam === "Tous" ? initialTemplates : initialTemplates.filter((item) => item.team?.name === activeTeam)),
-    [activeTeam]
+    () => (activeTeam === "Tous" ? templates : templates.filter((item) => item.team?.name === activeTeam)),
+    [activeTeam, templates]
   );
 
 
@@ -118,7 +118,7 @@ export default function TemplatesPage() {
 
       <CreateTemplateModal
         opened={createOpen}
-        templates={initialTemplates}
+        templates={templates}
         onClose={() => setCreateOpen(false)}
         onCreateTemplate={handleCreateTemplate}
       />

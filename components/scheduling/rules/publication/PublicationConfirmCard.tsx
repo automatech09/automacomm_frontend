@@ -2,14 +2,14 @@
 
 import { Badge, Box, Divider, Group, Paper, Stack, Text } from "@mantine/core";
 import { IconCalendarEvent, IconClock } from "@tabler/icons-react";
-import { initialTemplates } from "@/lib/mockupdata/templates/data";
 import { MOMENT_PHRASES } from "@/lib/constants/scheduler";
 import { TeamPill } from "../TeamPill";
+import type { Template } from "@/types";
 import type { Team } from "@/types/team";
 import type { TemplateFormat, VisualType } from "@/types/template";
 
 interface Props {
-  templateIds: number[];
+  templates: Template[];
   teams: Team[];
   moment: string;
   time: string;
@@ -17,8 +17,7 @@ interface Props {
   visualType: VisualType | null;
 }
 
-function Thumbnails({ templateIds }: { templateIds: number[] }) {
-  const templates = initialTemplates.filter((t) => templateIds.includes(t.id));
+function Thumbnails({ templates }: { templates: Template[] }) {
   if (templates.length === 0) return null;
 
   if (templates.length === 1) {
@@ -62,9 +61,9 @@ function Thumbnails({ templateIds }: { templateIds: number[] }) {
   );
 }
 
-export function PublicationConfirmCard({ templateIds, teams, moment, time, format, visualType }: Props) {
+export function PublicationConfirmCard({ templates, teams, moment, time, format, visualType }: Props) {
   const momentLabel = MOMENT_PHRASES[moment] ?? moment;
-  const isCarousel = templateIds.length > 1;
+  const isCarousel = templates.length > 1;
 
   return (
     <Stack gap="md">
@@ -81,11 +80,11 @@ export function PublicationConfirmCard({ templateIds, teams, moment, time, forma
         <Stack gap="lg">
           {/* Thumbnails + badges */}
           <Group gap="md" align="center">
-            <Thumbnails templateIds={templateIds} />
+            <Thumbnails templates={templates} />
             <Stack gap={6}>
               {isCarousel && (
                 <Badge variant="light" color="grape" radius="xl" size="sm">
-                  Carrousel · {templateIds.length} visuels
+                  Carrousel · {templates.length} visuels
                 </Badge>
               )}
               {format && (

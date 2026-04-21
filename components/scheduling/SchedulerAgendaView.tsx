@@ -6,8 +6,7 @@ import { fr } from "date-fns/locale";
 import { ActionIcon, Badge, Box, Group, Menu, Paper, SimpleGrid, Stack, Text } from "@mantine/core";
 import { DisplayImage } from "@/components/common/DisplayImage";
 import { IconDots } from "@tabler/icons-react";
-import { scheduledItems} from "@/lib/mockupdata/scheduler/data";
-import { ScheduledPublication } from "@/types";
+import type { ScheduledPublication } from "@/types";
 import { BadgeTeam } from "@/components/teams/BadgeTeam";
 import { getUniqueTeams } from "@/lib/utils/publications";
 import { COLORS } from "@/lib/constants/colors";
@@ -91,7 +90,7 @@ function AgendaEventCard({ event }: { event: ScheduledPublication }) {
 }
 
 // ─── Vue agenda ───────────────────────────────────────────
-export function SchedulerAgendaView({ date, events = scheduledItems }: { date: Date; events?: ScheduledPublication[] }) {
+export function SchedulerAgendaView({ date, events = [] }: { date: Date; events?: ScheduledPublication[] }) {
   const grouped = useMemo(() => {
     const map = new Map<string, { date: Date; events: ScheduledPublication[] }>();
     const sorted = [...events].sort((a, b) => a.date.getTime() - b.date.getTime());

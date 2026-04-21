@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Badge, Box, Button, Group, Image, Paper,
   SimpleGrid, Stack, Text, Title, UnstyledButton,
@@ -11,7 +11,7 @@ import { UploadModal } from "@/components/backgrounds/UploadModal";
 import { EditBackgroundModal } from "@/components/backgrounds/EditBackgroundModal";
 import { usedBackgrounds, reserveBackgroundUrls } from "@/lib/mockupdata/backgrounds/data";
 import type { Template } from "@/types";
-import { initialTemplates } from "@/lib/mockupdata/templates/data";
+import { getTemplates } from "@/lib/api/templates";
 import { initialTeams } from "@/lib/mockupdata/teams/data";
 
 const TABS = ["Vos prochains arrière-plans", "Arrière-plans utilisés", "Réserve aléatoire"] as const;
@@ -23,6 +23,7 @@ const TEAM_FILTERS = [
 type TabIndex = 0 | 1 | 2;
 
 export default function BackgroundsPage() {
+  const [templates, setTemplates] = useState<Template[]>([]);
   const [activeTab, setActiveTab] = useState<TabIndex>(0);
   const [teamFilter, setTeamFilter] = useState("Tous");
   const [uploadOpen, setUploadOpen] = useState(false);
@@ -31,9 +32,13 @@ export default function BackgroundsPage() {
   const [draggingReserve, setDraggingReserve] = useState(false);
   const [hoveredUsedId, setHoveredUsedId] = useState<number | null>(null);
 
+  useEffect(() => {
+    getTemplates().then(setTemplates);
+  }, []);
+
   const filtered = teamFilter === "Tous"
-    ? initialTemplates
-    : initialTemplates.filter((s) => s.team?.name === teamFilter);
+    ? templates
+    : templates.filter((s) => s.team?.name === teamFilter);
 
   return (
     <Stack gap="lg">

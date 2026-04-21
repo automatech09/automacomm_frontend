@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { addMonths, addWeeks, endOfWeek, format, startOfWeek, subMonths, subWeeks } from "date-fns";
 import { fr } from "date-fns/locale";
 import { ActionIcon, Box, Button, Group, Stack, Text } from "@mantine/core";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
-import { scheduledItems } from "@/lib/mockupdata/scheduler/data";
+import { getScheduledItems } from "@/lib/api/scheduler";
+import type { ScheduledPublication } from "@/types";
 import { initialTeams } from "@/lib/mockupdata/teams/data";
 import { SchedulerWeekView } from "@/components/scheduling/SchedulerWeekView";
 import { SchedulerMonthView } from "@/components/scheduling/SchedulerMonthView";
@@ -47,13 +48,18 @@ export function SchedulerCalendarView({ selectedTeams }: Props) {
   const [view, setView] = useState<ViewType>("week");
   const effectiveView: ViewType = isMobile ? "agenda" : view;
   const [date, setDate] = useState(() => new Date());
+  const [allItems, setAllItems] = useState<ScheduledPublication[]>([]);
+
+  useEffect(() => {
+    getScheduledItems().then(setAllItems);
+  }, []);
 
   const allSelected = selectedTeams.size === 0 || selectedTeams.size === initialTeams.length;
   const events = useMemo(
     () => allSelected
-      ? scheduledItems
-      : scheduledItems.filter((item) => item.templates.some((t) => t.team && selectedTeams.has(t.team.id))),
-    [selectedTeams, allSelected]
+      ? allItems
+      : allItems.filter((item) => item.templates.some((t) => t.team && selectedTeams.has(t.team.id))),
+    [allItems, selectedTeams, allSelected]
   );
 
   return (

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Paper, Stack, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
-import { initialPublications } from "@/lib/mockupdata/scheduler/rules";
+import { getPublications } from "@/lib/api/publications";
 import { initialTeams } from "@/lib/mockupdata/teams/data";
 import type { Publication } from "@/types/scheduling";
 import { PublicationCard } from "./publication/PublicationCard";
@@ -18,9 +18,13 @@ interface Props {
 
 export function SchedulerRulesView({ selectedTeams, createOpen, onCreateClose }: Props) {
   const router = useRouter();
-  const [publications, setPublications] = useState<Publication[]>(initialPublications);
+  const [publications, setPublications] = useState<Publication[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selected, setSelected] = useState<Publication | null>(null);
+
+  useEffect(() => {
+    getPublications().then(setPublications);
+  }, []);
 
   useEffect(() => {
     if (createOpen) {

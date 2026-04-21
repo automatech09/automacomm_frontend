@@ -1,4 +1,5 @@
-import { scheduledItems } from "@/lib/mockupdata/scheduler/data";
+import { buildScheduledItems } from "@/lib/mockupdata/scheduler/data";
+import { getTemplates } from "@/lib/api/templates";
 import type { ScheduledPublication } from "@/types";
 
 
@@ -32,5 +33,6 @@ export async function getSchedulerSummary(): Promise<SchedulerSummary> {
 
 export async function getScheduledItems(): Promise<ScheduledPublication[]> {
   // TODO: remplacer par un appel API → fetch("/api/scheduler")
-  return scheduledItems;
+  const templates = await getTemplates();
+  return buildScheduledItems(templates);
 }
